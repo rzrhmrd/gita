@@ -1,4 +1,4 @@
-package com.rzmmzdh.gita.feature_search.ui.core
+package com.rzmmzdh.gita.feature_search.ui.common
 
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.RepeatMode
