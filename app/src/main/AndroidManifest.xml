@@ -14,7 +14,7 @@
         android:theme="@style/Theme.Gita"
         tools:targetApi="31">
         <activity
-            android:name=".feature_search.ui.navigation.MainActivity"
+            android:name=".Entry"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Gita">

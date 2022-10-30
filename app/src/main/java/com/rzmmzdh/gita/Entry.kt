@@ -1,4 +1,4 @@
-package com.rzmmzdh.gita.feature_search.ui.navigation
+package com.rzmmzdh.gita
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,11 +16,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rzmmzdh.gita.core.theme.GitaTheme
+import com.rzmmzdh.gita.feature_search.ui.navigation.Destination
 import com.rzmmzdh.gita.feature_search.ui.search_repositories.SearchRepositoriesScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class Entry : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
