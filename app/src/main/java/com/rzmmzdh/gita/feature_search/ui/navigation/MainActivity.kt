@@ -1,4 +1,4 @@
-package com.rzmmzdh.gita
+package com.rzmmzdh.gita.feature_search.ui.navigation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
