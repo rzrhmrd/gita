@@ -11,7 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.rzmmzdh.gita.feature_search.ui.Destination
-import com.rzmmzdh.gita.feature_search.ui.search_repositories_screen.SearchRepositoriesScreen
+import com.rzmmzdh.gita.feature_search.ui.search_repositories.SearchRepositoriesScreen
 import com.rzmmzdh.gita.core.theme.GitaTheme
 import dagger.hilt.android.AndroidEntryPoint
 

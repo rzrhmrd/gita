@@ -1,4 +1,4 @@
-package com.rzmmzdh.gita.feature_search.ui.search_repositories_screen
+package com.rzmmzdh.gita.feature_search.ui.search_repositories
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
