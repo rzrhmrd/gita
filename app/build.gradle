@@ -80,4 +80,9 @@ dependencies {
 
     //KTX
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+
+    //Accompanist
+    def accompanist_version = "0.27.0"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-placeholder-material:$accompanist_version"
 }
