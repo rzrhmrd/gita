@@ -22,7 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.rzmmzdh.gita.feature_search.domain.model.Item
 import com.rzmmzdh.gita.feature_search.ui.core.colorTransition
-import com.rzmmzdh.gita.theme.jbMono
+import com.rzmmzdh.gita.core.theme.jbMono
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
