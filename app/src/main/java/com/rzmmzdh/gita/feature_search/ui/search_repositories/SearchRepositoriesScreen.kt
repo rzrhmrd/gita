@@ -197,7 +197,7 @@ private fun GitaSearchBar(
                     ),
                     placeholder = {
                         Text(
-                            text = "Gita",
+                            text = "~ Gita ~",
                             modifier = Modifier.fillMaxWidth(),
                             style = TextStyle(
                                 textAlign = TextAlign.Center,
