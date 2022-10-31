@@ -1,16 +1,18 @@
 package com.rzmmzdh.gita.feature_search.data
 
+import com.rzmmzdh.gita.feature_search.data.datasource.remote.dto.asItem
 import com.rzmmzdh.gita.feature_search.data.datasource.remote.dto.asSearchResult
 import com.rzmmzdh.gita.feature_search.domain.datasource.RemoteDataSource
+import com.rzmmzdh.gita.feature_search.domain.model.Item
 import com.rzmmzdh.gita.feature_search.domain.model.RepositorySearchResult
 import com.rzmmzdh.gita.feature_search.domain.model.Result
-import com.rzmmzdh.gita.feature_search.domain.repository.SearchRepository
+import com.rzmmzdh.gita.feature_search.domain.repository.GitHubRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class SearchRepositoryImpl @Inject constructor(private val remote: RemoteDataSource) :
-    SearchRepository {
+class GitHubRepositoryImpl @Inject constructor(private val remote: RemoteDataSource) :
+    GitHubRepository {
     override suspend fun search(query: String): Flow<Result<RepositorySearchResult>> =
         flow {
             val result = remote.search(query)
@@ -49,4 +51,15 @@ class SearchRepositoryImpl @Inject constructor(private val remote: RemoteDataSou
                 }
             }
         }
+
+    override suspend fun getRepo(repo: String): Flow<Result<Item?>> =
+        flow {
+            emit(Result.Loading)
+            try {
+                emit(Result.Success(data = remote.getRepo(repo).body()?.asItem()))
+            } catch (e: Exception) {
+                emit(Result.Error(exception = e))
+            }
+        }
 }
+
