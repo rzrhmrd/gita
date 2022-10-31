@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rzmmzdh.gita.feature_search.domain.model.RepositorySearchResult
 import com.rzmmzdh.gita.feature_search.domain.model.Result
 import com.rzmmzdh.gita.feature_search.domain.usecase.SearchRepositories
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -56,3 +57,9 @@ class SearchRepositoriesViewModel @Inject constructor(private val searchRepo: Se
         search(value)
     }
 }
+
+data class SearchResultUiState(
+    var isLoading: Boolean = false,
+    val data: RepositorySearchResult? = null,
+    val error: Throwable? = null
+)
