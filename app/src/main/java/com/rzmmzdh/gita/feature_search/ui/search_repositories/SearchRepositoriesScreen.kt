@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,13 +37,36 @@ fun SearchRepositoriesScreen(
             .fillMaxSize(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
-            GitaSearchBar(query = state.searchQuery.value, onQueryChange = {
-                state.onEvent(SearchRepositoriesEvent.OnSearchQueryChange(it))
-            }, isLoading = state.searchResult.value.isLoading)
+            GitaSearchBar(
+                query = state.searchQuery,
+                isLoading = state.searchResult.isLoading,
+                onQueryChange = state::onQueryChange
+            )
         }
     ) { paddingValues ->
-        SearchResult(paddingValues = paddingValues, result = state.searchResult.value.data?.items)
+        SearchResult(paddingValues = paddingValues, result = state.searchResult.data?.items)
+        if (state.errorMessage.isNotEmpty()) {
+            ShowErrorMessage(
+                key = snackbarHostState,
+                context = snackbarHostState,
+                message = state.errorMessage
+            )
+        }
 
+    }
+}
+
+@Composable
+private fun ShowErrorMessage(
+    key: Any,
+    message: String,
+    context: SnackbarHostState
+) {
+    LaunchedEffect(key1 = key) {
+        context.showSnackbar(
+            message = message,
+            duration = SnackbarDuration.Short
+        )
     }
 }
 
