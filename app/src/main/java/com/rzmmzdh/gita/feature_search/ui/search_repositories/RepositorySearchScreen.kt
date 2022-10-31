@@ -105,10 +105,11 @@ private fun SearchResult(
                     fontSize = 248.sp,
                     fontFamily = jbMono,
                     textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Light,
+                    lineHeight = 40.sp,
+                    letterSpacing = 20.sp,
                     color = colorTransition(
                         initialColor = MaterialTheme.colorScheme.primary,
-                        targetColor = MaterialTheme.colorScheme.secondary,
+                        targetColor = MaterialTheme.colorScheme.tertiary,
                         tweenAnimationDuration = 4000
                     )
                 )
