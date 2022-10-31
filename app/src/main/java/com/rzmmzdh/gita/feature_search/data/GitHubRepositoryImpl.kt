@@ -15,13 +15,13 @@ class GitHubRepositoryImpl @Inject constructor(private val remote: RemoteDataSou
     GitHubRepository {
     override suspend fun search(query: String): Flow<Result<RepositorySearchResult>> =
         flow {
-            val result = remote.search(query)
+            val result = remote.searchRepo(query)
             emit(Result.Loading)
             when {
                 result.isSuccessful -> {
                     emit(
                         Result.Success(
-                            data = remote.search(query).body()?.asSearchResult()
+                            data = remote.searchRepo(query).body()?.asSearchResult()
                                 ?: RepositorySearchResult()
                         )
                     )

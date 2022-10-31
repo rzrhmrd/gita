@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class RemoteDataSourceImpl @Inject constructor(private val githubService: GitHubRemoteService) :
     RemoteDataSource {
-    override suspend fun search(query: String): Response<RepositorySearchResultDto> {
+    override suspend fun searchRepo(query: String): Response<RepositorySearchResultDto> {
         return githubService.searchRepositories(query)
     }
 
