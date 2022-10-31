@@ -7,7 +7,7 @@ import com.rzmmzdh.gita.feature_search.domain.datasource.RemoteDataSource
 import com.rzmmzdh.gita.feature_search.domain.repository.GitHubRepository
 import com.rzmmzdh.gita.feature_search.domain.usecase.GetRepo
 import com.rzmmzdh.gita.feature_search.domain.usecase.GitHubUseCases
-import com.rzmmzdh.gita.feature_search.domain.usecase.SearchRepositories
+import com.rzmmzdh.gita.feature_search.domain.usecase.SearchRepo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -65,7 +65,7 @@ class GitHubModule {
     @Singleton
     fun provideGitHubUseCases(repository: GitHubRepository): GitHubUseCases {
         return GitHubUseCases(
-            searchRepositories = SearchRepositories(repository),
+            searchRepo = SearchRepo(repository),
             getRepo = GetRepo(repository)
         )
 

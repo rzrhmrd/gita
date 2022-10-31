@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rzmmzdh.gita.feature_search.domain.model.RepositorySearchResult
 import com.rzmmzdh.gita.feature_search.domain.model.Result
-import com.rzmmzdh.gita.feature_search.domain.usecase.SearchRepositories
+import com.rzmmzdh.gita.feature_search.domain.usecase.SearchRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RepositorySearchViewModel @Inject constructor(private val searchRepo: SearchRepositories) :
+class RepositorySearchViewModel @Inject constructor(private val searchRepo: SearchRepo) :
     ViewModel() {
     var searchResult by mutableStateOf(SearchResultUiState())
         private set
