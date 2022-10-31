@@ -161,8 +161,8 @@ private fun SearchResult(
                     )
                     Box(
                         modifier = Modifier.border(
-                            width = 1.dp,
-                            color = Color.Gray,
+                            width = DividerDefaults.Thickness,
+                            color = DividerDefaults.color,
                             shape = RoundedCornerShape(8.dp)
                         )
                     ) {
