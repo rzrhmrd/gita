@@ -24,6 +24,7 @@ import androidx.navigation.NavHostController
 import com.rzmmzdh.gita.feature_search.domain.model.Item
 import com.rzmmzdh.gita.feature_search.ui.common.colorTransition
 import com.rzmmzdh.gita.core.theme.jbMono
+import com.rzmmzdh.gita.feature_search.ui.navigation.Destination
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +45,15 @@ fun SearchRepositoriesScreen(
             )
         }
     ) { paddingValues ->
-        SearchResult(paddingValues = paddingValues, result = state.searchResult.data?.items)
+        SearchResult(
+            paddingValues = paddingValues,
+            result = state.searchResult.data?.items,
+            onResultClick = {
+                navController.navigate(
+                    Destination.RepositoryDetail.route + "?repo=${it?.full_name}"
+                )
+            }
+        )
         state.searchResult.error?.let {
             ShowErrorMessage(
                 key = snackbarHostState,
@@ -74,10 +83,12 @@ private fun ShowErrorMessage(
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchResult(
     paddingValues: PaddingValues,
-    result: List<Item>?
+    result: List<Item>?,
+    onResultClick: (Item?) -> Unit
 ) {
     LazyVerticalGrid(
         modifier = Modifier
@@ -94,7 +105,7 @@ private fun SearchResult(
             ElevatedCard(
                 modifier = Modifier
                     .size(198.dp)
-                    .padding(8.dp)
+                    .padding(8.dp), onClick = { onResultClick(result) }
             ) {
                 Column(
                     modifier = Modifier
