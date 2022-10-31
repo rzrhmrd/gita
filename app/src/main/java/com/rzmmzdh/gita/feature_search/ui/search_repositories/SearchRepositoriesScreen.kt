@@ -69,7 +69,7 @@ private fun ShowErrorMessage(
             message = message,
             duration = SnackbarDuration.Short
         )
-        onErrorShown
+        onErrorShown()
     }
 
 }
