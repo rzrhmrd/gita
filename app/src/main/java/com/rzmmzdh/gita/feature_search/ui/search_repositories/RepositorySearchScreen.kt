@@ -30,7 +30,7 @@ import com.rzmmzdh.gita.feature_search.ui.navigation.Destination
 @Composable
 fun SearchRepositoriesScreen(
     navController: NavHostController,
-    state: SearchRepositoriesViewModel = hiltViewModel()
+    state: RepositorySearchViewModel = hiltViewModel()
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(

@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchRepositoriesViewModel @Inject constructor(private val searchRepo: SearchRepositories) :
+class RepositorySearchViewModel @Inject constructor(private val searchRepo: SearchRepositories) :
     ViewModel() {
     var searchResult by mutableStateOf(SearchResultUiState())
         private set
