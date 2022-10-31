@@ -90,6 +90,31 @@ private fun SearchResult(
     result: List<Item>?,
     onResultClick: (Item?) -> Unit
 ) {
+    if (result.isNullOrEmpty()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = paddingValues.calculateTopPadding()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "~",
+                modifier = Modifier.fillMaxWidth(),
+                style = TextStyle(
+                    fontSize = 248.sp,
+                    fontFamily = jbMono,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Light,
+                    color = colorTransition(
+                        initialColor = MaterialTheme.colorScheme.primary,
+                        targetColor = MaterialTheme.colorScheme.secondary,
+                        tweenAnimationDuration = 4000
+                    )
+                )
+            )
+        }
+    }
     LazyVerticalGrid(
         modifier = Modifier
             .fillMaxSize()
@@ -195,7 +220,8 @@ private fun GitaSearchBar(
     query: String, onQueryChange: (String) -> Unit, isLoading: Boolean
 ) =
     CenterAlignedTopAppBar(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth(),
         title = {
             Column {
                 TextField(
@@ -203,7 +229,7 @@ private fun GitaSearchBar(
                     onValueChange = onQueryChange,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(60.dp),
+                        .height(64.dp),
                     shape = RoundedCornerShape(32.dp),
                     colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
                     singleLine = true,
@@ -214,18 +240,12 @@ private fun GitaSearchBar(
                     ),
                     placeholder = {
                         Text(
-                            text = "~ Gita ~",
+                            text = "Gita",
                             modifier = Modifier.fillMaxWidth(),
                             style = TextStyle(
                                 textAlign = TextAlign.Center,
                                 fontFamily = jbMono,
                                 fontSize = 20.sp,
-                                fontWeight = FontWeight.Normal,
-                                color = colorTransition(
-                                    initialColor = MaterialTheme.colorScheme.primary,
-                                    targetColor = MaterialTheme.colorScheme.secondary,
-                                    tweenAnimationDuration = 3000
-                                )
                             )
                         )
                     }
