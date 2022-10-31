@@ -25,8 +25,6 @@ class SearchRepositoriesViewModel @Inject constructor(private val searchRepo: Se
         private set
     var searchJob: Job? = null
         private set
-    var errorMessage by mutableStateOf("")
-        private set
 
     private fun search(query: String) {
         searchQuery = query
@@ -34,16 +32,17 @@ class SearchRepositoriesViewModel @Inject constructor(private val searchRepo: Se
         searchJob = viewModelScope.launch {
             delay(300L)
             searchRepo(query).collectLatest { result ->
-                when (result) {
+                searchResult = when (result) {
                     is Result.Error -> {
-                        errorMessage = result.exception?.localizedMessage.toString()
-                        searchResult = searchResult.copy(isLoading = false)
+                        searchResult.copy(error = result.exception, isLoading = false)
                     }
 
-                    is Result.Loading -> searchResult =
-                        searchResult.copy(isLoading = true)
-                    is Result.Success -> searchResult =
-                        searchResult.copy(data = result.data, isLoading = false)
+                    is Result.Loading -> searchResult.copy(isLoading = true)
+                    is Result.Success -> searchResult.copy(
+                        data = result.data,
+                        isLoading = false,
+                        error = null
+                    )
                 }
             }
         }
