@@ -1,10 +1,13 @@
 package com.rzmmzdh.gita.feature_search.data.di
 
-import com.rzmmzdh.gita.feature_search.data.SearchRepositoryImpl
+import com.rzmmzdh.gita.feature_search.data.GitHubRepositoryImpl
 import com.rzmmzdh.gita.feature_search.data.datasource.remote.GitHubRemoteService
 import com.rzmmzdh.gita.feature_search.data.datasource.remote.RemoteDataSourceImpl
 import com.rzmmzdh.gita.feature_search.domain.datasource.RemoteDataSource
-import com.rzmmzdh.gita.feature_search.domain.repository.SearchRepository
+import com.rzmmzdh.gita.feature_search.domain.repository.GitHubRepository
+import com.rzmmzdh.gita.feature_search.domain.usecase.GetRepo
+import com.rzmmzdh.gita.feature_search.domain.usecase.GitHubUseCases
+import com.rzmmzdh.gita.feature_search.domain.usecase.SearchRepositories
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,7 +21,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class SearchModule {
+class GitHubModule {
     @Provides
     @Singleton
     fun provideHttpClient(): OkHttpClient {
@@ -54,7 +57,17 @@ class SearchModule {
 
     @Provides
     @Singleton
-    fun provideSearchRepository(dataSource: RemoteDataSource): SearchRepository {
-        return SearchRepositoryImpl(dataSource)
+    fun provideSearchRepository(dataSource: RemoteDataSource): GitHubRepository {
+        return GitHubRepositoryImpl(dataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGitHubUseCases(repository: GitHubRepository): GitHubUseCases {
+        return GitHubUseCases(
+            searchRepositories = SearchRepositories(repository),
+            getRepo = GetRepo(repository)
+        )
+
     }
 }
