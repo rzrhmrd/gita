@@ -29,20 +29,20 @@ class SearchRepositoryImpl @Inject constructor(private val remote: RemoteDataSou
                         Result.Error(
                             Throwable(
                                 message =
-                                "A network client error has occurred."
+                                "A network client error has occurred. (${result.code()})"
                             )
                         )
                     )
                 }
                 result.code() in 500..599 -> {
-                    emit(Result.Error(Throwable(message = "A network server error has occurred.")))
+                    emit(Result.Error(Throwable(message = "A network server error has occurred. (${result.code()})")))
                 }
                 else -> {
                     emit(
                         Result.Error(
                             Throwable(
                                 message = "An unknown error has occurred. " +
-                                        "Please make sure you\'re connected to the internet."
+                                        "Please make sure you\'re connected to the internet. (${result.code()})"
                             )
                         )
                     )

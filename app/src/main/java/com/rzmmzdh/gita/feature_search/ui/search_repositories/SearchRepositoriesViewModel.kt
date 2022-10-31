@@ -56,6 +56,10 @@ class SearchRepositoriesViewModel @Inject constructor(private val searchRepo: Se
         }
         search(value)
     }
+
+    fun onErrorShown() {
+        searchResult = searchResult.copy(error = null)
+    }
 }
 
 data class SearchResultUiState(

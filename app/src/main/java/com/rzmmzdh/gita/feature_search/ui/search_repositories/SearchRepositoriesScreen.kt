@@ -45,11 +45,12 @@ fun SearchRepositoriesScreen(
         }
     ) { paddingValues ->
         SearchResult(paddingValues = paddingValues, result = state.searchResult.data?.items)
-        if (state.errorMessage.isNotEmpty()) {
+        state.searchResult.error?.let {
             ShowErrorMessage(
                 key = snackbarHostState,
                 context = snackbarHostState,
-                message = state.errorMessage
+                message = state.searchResult.error?.localizedMessage.toString(),
+                onErrorShown = state::onErrorShown
             )
         }
 
@@ -60,14 +61,17 @@ fun SearchRepositoriesScreen(
 private fun ShowErrorMessage(
     key: Any,
     message: String,
-    context: SnackbarHostState
+    context: SnackbarHostState,
+    onErrorShown: () -> Unit
 ) {
     LaunchedEffect(key1 = key) {
         context.showSnackbar(
             message = message,
             duration = SnackbarDuration.Short
         )
+        onErrorShown
     }
+
 }
 
 @Composable
