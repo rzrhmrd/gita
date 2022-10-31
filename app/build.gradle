@@ -73,7 +73,7 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
 
     //Navigation compose
-    def nav_version = "2.5.2"
+    def nav_version = "2.5.3"
     def hilt_navigation_compose = "1.0.0"
     implementation "androidx.navigation:navigation-compose:$nav_version"
     implementation "androidx.hilt:hilt-navigation-compose:$hilt_navigation_compose"
