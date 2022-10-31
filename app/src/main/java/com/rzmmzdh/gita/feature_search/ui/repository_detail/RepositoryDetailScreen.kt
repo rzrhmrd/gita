@@ -130,7 +130,7 @@ fun RepositoryDetailScreen(
                             fontFamily = jbMono,
                             fontWeight = FontWeight.Light
                         ),
-                        modifier = Modifier.padding(4.dp)
+                        modifier = Modifier.padding(6.dp)
                     )
 
                 }
