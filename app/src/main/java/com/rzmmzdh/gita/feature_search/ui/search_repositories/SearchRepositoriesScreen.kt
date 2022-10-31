@@ -89,7 +89,7 @@ private fun SearchResult(
         items(result ?: emptyList()) { result ->
             ElevatedCard(
                 modifier = Modifier
-                    .size(192.dp)
+                    .size(198.dp)
                     .padding(8.dp)
             ) {
                 Column(
