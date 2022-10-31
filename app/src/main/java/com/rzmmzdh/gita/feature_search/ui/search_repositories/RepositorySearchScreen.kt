@@ -105,7 +105,9 @@ private fun SearchResult(
             ElevatedCard(
                 modifier = Modifier
                     .size(198.dp)
-                    .padding(8.dp), onClick = { onResultClick(result) }
+                    .padding(8.dp),
+                onClick = { onResultClick(result) },
+                shape = RoundedCornerShape(24.dp)
             ) {
                 Column(
                     modifier = Modifier
