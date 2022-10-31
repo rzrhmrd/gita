@@ -11,12 +11,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgs
+import androidx.navigation.navArgument
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rzmmzdh.gita.core.theme.GitaTheme
 import com.rzmmzdh.gita.feature_search.ui.navigation.Destination
+import com.rzmmzdh.gita.feature_search.ui.repository_detail.RepositoryDetailScreen
 import com.rzmmzdh.gita.feature_search.ui.search_repositories.SearchRepositoriesScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -37,6 +41,15 @@ class Entry : ComponentActivity() {
                     ) {
                         composable(Destination.SearchRepositories.route) {
                             SearchRepositoriesScreen(navController)
+                        }
+                        composable(
+                            route = Destination.RepositoryDetail.route + "?repo={repo}",
+                            arguments = listOf(navArgument("repo") {
+                                type = NavType.StringType
+                                defaultValue = "repo"
+                            }
+                            )) {
+                            RepositoryDetailScreen(navController)
                         }
                     }
                     HideSystemUi()
