@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,18 +22,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.rzmmzdh.gita.common.theme.jbMono
+import com.rzmmzdh.gita.common.util.ConnectionState
+import com.rzmmzdh.gita.common.util.connectivityState
 import com.rzmmzdh.gita.feature_search.domain.model.Item
 import com.rzmmzdh.gita.feature_search.ui.common.colorTransition
-import com.rzmmzdh.gita.core.theme.jbMono
 import com.rzmmzdh.gita.feature_search.ui.navigation.Destination
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoroutinesApi::class)
 @Composable
 fun SearchRepositoriesScreen(
     navController: NavHostController,
     state: RepositorySearchViewModel = hiltViewModel()
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    val activeConnection by connectivityState()
+    val isDeviceConnectedToInternet = activeConnection === ConnectionState.Available
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -41,10 +47,18 @@ fun SearchRepositoriesScreen(
             GitaSearchBar(
                 query = state.searchQuery,
                 isLoading = state.searchResult.isLoading,
-                onQueryChange = state::onQueryChange
+                onQueryChange = { state.onQueryChange(value = it, isDeviceConnectedToInternet) }
             )
         }
     ) { paddingValues ->
+        state.searchResult.error?.let {
+            LogMessage(
+                key = snackbarHostState,
+                context = snackbarHostState,
+                message = state.searchResult.error?.localizedMessage.toString(),
+                onErrorShown = state::onErrorShown
+            )
+        }
         SearchResult(
             paddingValues = paddingValues,
             result = state.searchResult.data?.items,
@@ -52,70 +66,80 @@ fun SearchRepositoriesScreen(
                 navController.navigate(
                     Destination.RepositoryDetail.route + "?repo=${it?.full_name}"
                 )
-            }
+            }, isDeviceConnected = isDeviceConnectedToInternet
         )
-        state.searchResult.error?.let {
-            ShowErrorMessage(
-                key = snackbarHostState,
-                context = snackbarHostState,
-                message = state.searchResult.error?.localizedMessage.toString(),
-                onErrorShown = state::onErrorShown
-            )
-        }
 
     }
 }
 
 @Composable
-private fun ShowErrorMessage(
-    key: Any,
-    message: String,
-    context: SnackbarHostState,
-    onErrorShown: () -> Unit
-) {
-    LaunchedEffect(key1 = key) {
-        context.showSnackbar(
-            message = message,
-            duration = SnackbarDuration.Short
-        )
-        onErrorShown()
-    }
-
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
+private fun GitaSearchBar(
+    query: String, onQueryChange: (String) -> Unit, isLoading: Boolean
+) =
+    CenterAlignedTopAppBar(
+        modifier = Modifier
+            .fillMaxWidth(),
+        title = {
+            Column {
+                TextField(
+                    value = query,
+                    onValueChange = onQueryChange,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(64.dp),
+                    shape = RoundedCornerShape(32.dp),
+                    colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
+                    singleLine = true,
+                    textStyle = TextStyle(
+                        textAlign = TextAlign.Center,
+                        fontSize = 20.sp,
+                        fontFamily = jbMono
+                    ),
+                    placeholder = {
+                        Text(
+                            text = "Gita",
+                            modifier = Modifier.fillMaxWidth(),
+                            style = TextStyle(
+                                textAlign = TextAlign.Center,
+                                fontFamily = jbMono,
+                                fontSize = 20.sp,
+                            )
+                        )
+                    }
+                )
+                if (isLoading) {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
+
+            }
+
+        })
+
 @Composable
 private fun SearchResult(
     paddingValues: PaddingValues,
     result: List<Item>?,
+    onResultClick: (Item?) -> Unit,
+    isDeviceConnected: Boolean
+) {
+    if (!isDeviceConnected) {
+        OfflinePlaceholder(paddingValues)
+
+    } else if (result.isNullOrEmpty()) {
+        EmptyResultPlaceholder(paddingValues)
+    } else {
+        SearchItem(paddingValues, result, onResultClick)
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun SearchItem(
+    paddingValues: PaddingValues,
+    result: List<Item>?,
     onResultClick: (Item?) -> Unit
 ) {
-    if (result.isNullOrEmpty()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = paddingValues.calculateTopPadding()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "~",
-                modifier = Modifier.fillMaxWidth(),
-                style = TextStyle(
-                    fontSize = 248.sp,
-                    fontFamily = jbMono,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 40.sp,
-                    letterSpacing = 20.sp,
-                    color = colorTransition(
-                        initialColor = MaterialTheme.colorScheme.primary,
-                        targetColor = MaterialTheme.colorScheme.tertiary,
-                        tweenAnimationDuration = 4000
-                    )
-                )
-            )
-        }
-    }
     LazyVerticalGrid(
         modifier = Modifier
             .fillMaxSize()
@@ -216,45 +240,86 @@ private fun SearchResult(
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
-private fun GitaSearchBar(
-    query: String, onQueryChange: (String) -> Unit, isLoading: Boolean
-) =
-    CenterAlignedTopAppBar(
+private fun EmptyResultPlaceholder(paddingValues: PaddingValues) {
+    Column(
         modifier = Modifier
-            .fillMaxWidth(),
-        title = {
-            Column {
-                TextField(
-                    value = query,
-                    onValueChange = onQueryChange,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(64.dp),
-                    shape = RoundedCornerShape(32.dp),
-                    colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
-                    singleLine = true,
-                    textStyle = TextStyle(
-                        textAlign = TextAlign.Center,
-                        fontSize = 20.sp,
-                        fontFamily = jbMono
-                    ),
-                    placeholder = {
-                        Text(
-                            text = "Gita",
-                            modifier = Modifier.fillMaxWidth(),
-                            style = TextStyle(
-                                textAlign = TextAlign.Center,
-                                fontFamily = jbMono,
-                                fontSize = 20.sp,
-                            )
-                        )
-                    }
+            .fillMaxSize()
+            .padding(top = paddingValues.calculateTopPadding()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "~",
+            modifier = Modifier.fillMaxWidth(),
+            style = TextStyle(
+                fontSize = 248.sp,
+                fontFamily = jbMono,
+                textAlign = TextAlign.Center,
+                lineHeight = 40.sp,
+                letterSpacing = 20.sp,
+                color = colorTransition(
+                    initialColor = MaterialTheme.colorScheme.primary,
+                    targetColor = MaterialTheme.colorScheme.tertiary,
+                    tweenAnimationDuration = 4000
                 )
-                if (isLoading) {
-                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-                }
 
-            }
+            )
+        )
+    }
+}
 
-        })
+@Composable
+private fun OfflinePlaceholder(paddingValues: PaddingValues) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = paddingValues.calculateTopPadding()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        val colorTransition = colorTransition(
+            initialColor = MaterialTheme.colorScheme.primary,
+            targetColor = MaterialTheme.colorScheme.error,
+            tweenAnimationDuration = 4000
+        )
+        Text(
+            text = "~",
+            modifier = Modifier.fillMaxWidth(),
+            style = TextStyle(
+                fontSize = 248.sp,
+                fontFamily = jbMono,
+                textAlign = TextAlign.Center,
+                lineHeight = 40.sp,
+                letterSpacing = 20.sp,
+                color = colorTransition
+            )
+        )
+        Text(
+            text = "Device is offline. Please check your internet connection.",
+            modifier = Modifier.fillMaxWidth(),
+            style = TextStyle(
+                fontSize = 16.sp,
+                fontFamily = jbMono,
+                textAlign = TextAlign.Center,
+                color = colorTransition
+            )
+        )
+    }
+}
+
+@Composable
+private fun LogMessage(
+    key: Any,
+    message: String,
+    context: SnackbarHostState,
+    onErrorShown: () -> Unit
+) {
+    LaunchedEffect(key1 = key) {
+        context.showSnackbar(
+            message = message,
+            duration = SnackbarDuration.Short
+        )
+        onErrorShown()
+    }
+
+}

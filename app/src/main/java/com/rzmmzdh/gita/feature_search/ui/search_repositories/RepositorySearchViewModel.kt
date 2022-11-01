@@ -27,17 +27,20 @@ class RepositorySearchViewModel @Inject constructor(private val searchRepo: Sear
         private set
 
     private fun search(query: String) {
-        searchQuery = query
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
-            delay(300L)
+            delay(200L)
             searchRepo(query).collectLatest { result ->
                 searchResult = when (result) {
                     is Result.Error -> {
-                        searchResult.copy(error = result.exception, isLoading = false)
+                        searchResult.copy(error = result.exception, isLoading = false, data = null)
                     }
 
-                    is Result.Loading -> searchResult.copy(isLoading = true)
+                    is Result.Loading -> searchResult.copy(
+                        isLoading = true,
+                        data = null,
+                        error = null
+                    )
                     is Result.Success -> searchResult.copy(
                         data = result.data,
                         isLoading = false,
@@ -48,16 +51,25 @@ class RepositorySearchViewModel @Inject constructor(private val searchRepo: Sear
         }
     }
 
-    fun onQueryChange(value: String) {
+    fun onQueryChange(value: String, deviceIsConnectedToInternet: Boolean) {
         searchQuery = value
-        if (value.isBlank()) {
-            searchResult = searchResult.copy(data = null)
+        if (deviceIsConnectedToInternet) {
+            if (value.isBlank()) {
+                searchResult = searchResult.copy(isLoading = false, data = null, error = null)
+
+            }
+            search(value)
+        } else {
+            searchResult = searchResult.copy(
+                data = null,
+                error = Throwable(message = "Device is offline. Please check your internet connection."),
+                isLoading = false
+            )
         }
-        search(value)
     }
 
     fun onErrorShown() {
-        searchResult = searchResult.copy(error = null)
+        searchResult = searchResult.copy(error = null, data = null, isLoading = false)
     }
 }
 
