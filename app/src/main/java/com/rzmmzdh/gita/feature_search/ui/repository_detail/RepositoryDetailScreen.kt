@@ -42,28 +42,30 @@ fun RepositoryDetailScreen(
         modifier = Modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
-        RepoDetail(
-            paddingValues,
-            stars = state.repoDetailState.detail?.stargazersCount ?: 0,
-            forks = state.repoDetailState.detail?.forksCount ?: 0,
-            avatar = state.repoDetailState.detail?.owner?.avatar_url,
-            name = state.repoDetailState.detail?.fullName ?: stringResource(R.string.name),
-            description = state.repoDetailState.detail?.description
-                ?: stringResource(R.string.description),
-            cloneUrl = state.repoDetailState.detail?.cloneUrl
-                ?: stringResource(R.string.githubHomePage),
-            onCloneUrlClick = {
-                clipboardManager.setText(
-                    AnnotatedString(
-                        state.repoDetailState.detail?.cloneUrl ?: "https://github.com"
+        state.repoDetailState.detail?.let {
+            RepoDetail(
+                paddingValues,
+                stars = it.stargazersCount,
+                forks = it.forksCount,
+                avatar = it.owner.avatar_url,
+                name = it.fullName,
+                description = it.description
+                    ?: stringResource(R.string.description),
+                cloneUrl = it.cloneUrl,
+                onCloneUrlClick = {
+                    clipboardManager.setText(
+                        AnnotatedString(
+                            it.cloneUrl
+                        )
                     )
-                )
-                snackbarScope.launch { snackbarHostState.showSnackbar(message = "Clone URL copied to clipboard.") }
-            },
-            language = state.repoDetailState.detail?.language ?: stringResource(R.string.language),
-            license = state.repoDetailState.detail?.license?.name
-                ?: stringResource(R.string.license)
-        )
+                    snackbarScope.launch { snackbarHostState.showSnackbar(message = "Clone URL copied to clipboard.") }
+                },
+                language = it.language
+                    ?: stringResource(R.string.language),
+                license = it.license?.name
+                    ?: stringResource(R.string.license)
+            )
+        }
     }
 }
 
