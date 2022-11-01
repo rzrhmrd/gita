@@ -31,20 +31,19 @@ class GitHubRepositoryImpl @Inject constructor(private val remote: RemoteDataSou
                         Result.Error(
                             Throwable(
                                 message =
-                                "Log: A network client error has occurred. (${result.code()})"
+                                "Network logger: (Code ${result.code()})"
                             )
                         )
                     )
                 }
                 result.code() in 500..599 -> {
-                    emit(Result.Error(Throwable(message = "Log: A network server error has occurred. (${result.code()})")))
+                    emit(Result.Error(Throwable(message = "Network logger: (Code ${result.code()})")))
                 }
                 else -> {
                     emit(
                         Result.Error(
                             Throwable(
-                                message = "Log: An unknown error has occurred. " +
-                                        "Please make sure you\'re connected to the internet. (${result.code()})"
+                                message = "Network logger: (Code ${result.code()})"
                             )
                         )
                     )
