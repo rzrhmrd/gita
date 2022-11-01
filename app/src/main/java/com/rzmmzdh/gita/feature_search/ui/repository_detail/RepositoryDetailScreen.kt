@@ -132,7 +132,7 @@ private fun Language(language: String) {
         Text(
             text = language,
             style = TextStyle(
-                fontSize = 14.sp,
+                fontSize = 12.sp,
                 fontFamily = jbMono,
                 fontWeight = FontWeight.Light,
             ),
