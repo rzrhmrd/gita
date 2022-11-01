@@ -1,5 +1,6 @@
 package com.rzmmzdh.gita.feature_search.data.di
 
+import com.rzmmzdh.gita.BuildConfig
 import com.rzmmzdh.gita.feature_search.data.GitHubRepositoryImpl
 import com.rzmmzdh.gita.feature_search.data.datasource.remote.GitHubRemoteService
 import com.rzmmzdh.gita.feature_search.data.datasource.remote.RemoteDataSourceImpl
@@ -32,8 +33,7 @@ class GitHubModule {
                 val request = chain.request()
                 request.newBuilder()
                     .addHeader(
-                        "Authorization",
-                        "Bearer " + "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"
+                        "Authorization", BuildConfig.GITHUB_API_KEY
                     ).build()
                 return@Interceptor chain.proceed(request)
             }).build()
