@@ -52,7 +52,7 @@ class RepositorySearchViewModel @Inject constructor(private val searchRepo: Sear
     }
 
     fun onErrorShown() {
-        searchResult = searchResult.copy(error = null, isLoading = false)
+        searchResult = searchResult.copy(error = null)
     }
 
 }

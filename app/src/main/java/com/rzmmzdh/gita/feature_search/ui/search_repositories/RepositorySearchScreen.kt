@@ -53,8 +53,8 @@ fun SearchRepositoriesScreen(
     ) { paddingValues ->
         state.searchResult.error?.let {
             snackbarScope.launch {
-                val errorMessage = state.searchResult.error!!.message
-                snackbarHostState.showSnackbar(errorMessage.toString())
+                val errorMessage = state.searchResult.error!!.localizedMessage
+                snackbarHostState.showSnackbar(errorMessage)
                 state.onErrorShown()
             }
         }

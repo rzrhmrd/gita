@@ -35,13 +35,10 @@ class RepositoryDetailViewModel @Inject constructor(
                     )
                     is Result.Loading -> repoDetailState.copy(
                         isLoading = true,
-                        detail = null,
-                        error = null
                     )
                     is Result.Success -> repoDetailState.copy(
                         isLoading = false,
                         detail = result.data,
-                        error = null
                     )
                 }
             }
