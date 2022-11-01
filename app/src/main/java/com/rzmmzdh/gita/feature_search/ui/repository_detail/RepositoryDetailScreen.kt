@@ -1,18 +1,23 @@
 package com.rzmmzdh.gita.feature_search.ui.repository_detail
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,11 +34,12 @@ fun RepositoryDetailScreen(
     Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->
         RepoDetail(
             paddingValues,
-            stars = state.repoDetailState.detail?.stargazers_count ?: 0,
-            forks = state.repoDetailState.detail?.forks_count ?: 0,
+            stars = state.repoDetailState.detail?.stargazersCount ?: 0,
+            forks = state.repoDetailState.detail?.forksCount ?: 0,
             avatar = state.repoDetailState.detail?.owner?.avatar_url,
-            name = state.repoDetailState.detail?.full_name ?: "name",
+            name = state.repoDetailState.detail?.fullName ?: "name",
             description = state.repoDetailState.detail?.description ?: "description",
+            cloneUrl = state.repoDetailState.detail?.cloneUrl ?: "https://github.com",
             language = state.repoDetailState.detail?.language ?: "language",
             license = state.repoDetailState.detail?.license?.name ?: "license"
         )
@@ -48,9 +54,11 @@ private fun RepoDetail(
     avatar: String?,
     name: String = "name",
     description: String = "description",
+    cloneUrl: String,
     language: String = "language",
     license: String = "license"
 ) {
+    val clipboardManager: ClipboardManager = LocalClipboardManager.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -118,7 +126,7 @@ private fun RepoDetail(
                 fontFamily = jbMono,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             ),
             maxLines = 2
         )
@@ -135,6 +143,31 @@ private fun RepoDetail(
             maxLines = 6
         )
         Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { clipboardManager.setText(AnnotatedString(cloneUrl)) },
+            text = cloneUrl,
+            style = TextStyle(
+                fontFamily = jbMono,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Normal,
+                textAlign = TextAlign.Center,
+                textDecoration = TextDecoration.LineThrough
+            ),
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = license,
+            style = TextStyle(
+                fontFamily = jbMono,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Light,
+                textAlign = TextAlign.Center
+            ),
+        )
+        Spacer(modifier = Modifier.height(16.dp))
         Box(
             modifier = Modifier.border(
                 width = DividerDefaults.Thickness,
@@ -147,23 +180,12 @@ private fun RepoDetail(
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontFamily = jbMono,
-                    fontWeight = FontWeight.Light
+                    fontWeight = FontWeight.Light,
                 ),
                 modifier = Modifier.padding(6.dp)
             )
 
         }
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = license,
-            style = TextStyle(
-                fontFamily = jbMono,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Light,
-                textAlign = TextAlign.Center
-            ),
-        )
 
     }
 }
