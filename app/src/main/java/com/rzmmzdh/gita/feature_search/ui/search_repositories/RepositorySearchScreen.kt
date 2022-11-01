@@ -7,10 +7,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +26,7 @@ import com.rzmmzdh.gita.feature_search.domain.model.Item
 import com.rzmmzdh.gita.feature_search.ui.common.colorTransition
 import com.rzmmzdh.gita.feature_search.ui.navigation.Destination
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalCoroutinesApi::class)
 @Composable
@@ -37,6 +35,7 @@ fun SearchRepositoriesScreen(
     state: RepositorySearchViewModel = hiltViewModel()
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarScope = rememberCoroutineScope()
     val activeConnection by connectivityState()
     val isDeviceConnectedToInternet = activeConnection === ConnectionState.Available
     Scaffold(
@@ -52,12 +51,11 @@ fun SearchRepositoriesScreen(
         }
     ) { paddingValues ->
         state.searchResult.error?.let {
-            LogMessage(
-                key = snackbarHostState,
-                context = snackbarHostState,
-                message = state.searchResult.error?.localizedMessage.toString(),
-                onErrorShown = state::onErrorShown
-            )
+            snackbarScope.launch {
+                val errorMessage = state.searchResult.error!!.message
+                snackbarHostState.showSnackbar(errorMessage.toString())
+                state.onErrorShown()
+            }
         }
         SearchResult(
             paddingValues = paddingValues,
@@ -305,21 +303,4 @@ private fun OfflinePlaceholder(paddingValues: PaddingValues) {
             )
         )
     }
-}
-
-@Composable
-private fun LogMessage(
-    key: Any,
-    message: String,
-    context: SnackbarHostState,
-    onErrorShown: () -> Unit
-) {
-    LaunchedEffect(key1 = key) {
-        context.showSnackbar(
-            message = message,
-            duration = SnackbarDuration.Short
-        )
-        onErrorShown()
-    }
-
 }
