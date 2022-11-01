@@ -47,7 +47,7 @@ fun SearchRepositoriesScreen(
             GitaSearchBar(
                 query = state.searchQuery,
                 isLoading = state.searchResult.isLoading,
-                onQueryChange = { state.onQueryChange(value = it, isDeviceConnectedToInternet) }
+                onQueryChange = { state.onQueryChange(it) }
             )
         }
     ) { paddingValues ->

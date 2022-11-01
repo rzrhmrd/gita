@@ -51,26 +51,15 @@ class RepositorySearchViewModel @Inject constructor(private val searchRepo: Sear
         }
     }
 
-    fun onQueryChange(value: String, deviceIsConnectedToInternet: Boolean) {
-        searchQuery = value
-        if (deviceIsConnectedToInternet) {
-            if (value.isBlank()) {
-                searchResult = searchResult.copy(isLoading = false, data = null, error = null)
-
-            }
-            search(value)
-        } else {
-            searchResult = searchResult.copy(
-                data = null,
-                error = Throwable(message = "Device is offline. Please check your internet connection."),
-                isLoading = false
-            )
-        }
+    fun onQueryChange(newValue: String) {
+        searchQuery = newValue
+        search(searchQuery)
     }
 
     fun onErrorShown() {
         searchResult = searchResult.copy(error = null, data = null, isLoading = false)
     }
+
 }
 
 data class SearchResultUiState(
