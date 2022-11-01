@@ -31,19 +31,19 @@ class GitHubRepositoryImpl @Inject constructor(private val remote: RemoteDataSou
                         Result.Error(
                             Throwable(
                                 message =
-                                "Network logger: (Code ${result.code()})"
+                                "Network logger: ${result.code()}"
                             )
                         )
                     )
                 }
                 result.code() in 500..599 -> {
-                    emit(Result.Error(Throwable(message = "Network logger: (Code ${result.code()})")))
+                    emit(Result.Error(Throwable(message = "Network logger: ${result.code()}")))
                 }
                 else -> {
                     emit(
                         Result.Error(
                             Throwable(
-                                message = "Network logger: (Code ${result.code()})"
+                                message = "Network logger: ${result.code()}"
                             )
                         )
                     )
