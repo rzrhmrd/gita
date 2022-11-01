@@ -46,7 +46,8 @@ fun SearchRepositoriesScreen(
             GitaSearchBar(
                 query = state.searchQuery,
                 isLoading = state.searchResult.isLoading,
-                onQueryChange = { state.onQueryChange(it) }
+                onQueryChange = { state.onQueryChange(it) },
+                enabled = isDeviceConnectedToInternet
             )
         }
     ) { paddingValues ->
@@ -73,7 +74,7 @@ fun SearchRepositoriesScreen(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun GitaSearchBar(
-    query: String, onQueryChange: (String) -> Unit, isLoading: Boolean
+    query: String, onQueryChange: (String) -> Unit, isLoading: Boolean, enabled: Boolean
 ) =
     CenterAlignedTopAppBar(
         modifier = Modifier
@@ -104,7 +105,8 @@ private fun GitaSearchBar(
                                 fontSize = 20.sp,
                             )
                         )
-                    }
+                    },
+                    enabled = enabled
                 )
                 if (isLoading) {
                     LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
