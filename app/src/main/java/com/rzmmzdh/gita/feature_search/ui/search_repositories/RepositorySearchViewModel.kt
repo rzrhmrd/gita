@@ -20,7 +20,6 @@ class RepositorySearchViewModel @Inject constructor(private val searchRepo: Sear
     ViewModel() {
     var searchResult by mutableStateOf(SearchResultUiState())
         private set
-
     var searchQuery by mutableStateOf("")
         private set
     var searchJob: Job? = null
@@ -36,11 +35,7 @@ class RepositorySearchViewModel @Inject constructor(private val searchRepo: Sear
                         searchResult.copy(error = result.exception, isLoading = false, data = null)
                     }
 
-                    is Result.Loading -> searchResult.copy(
-                        isLoading = true,
-                        data = null,
-                        error = null
-                    )
+                    is Result.Loading -> searchResult.copy(isLoading = true)
                     is Result.Success -> searchResult.copy(
                         data = result.data,
                         isLoading = false,
