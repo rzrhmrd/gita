@@ -21,26 +21,26 @@ class RepositoryDetailViewModel @Inject constructor(
 ) : ViewModel() {
     private val repo: String = checkNotNull(savedStateHandle["repo"])
 
-    var repoUiState by mutableStateOf(RepoUiState())
+    var repoDetailState by mutableStateOf(RepoDetailState())
         private set
 
     init {
         viewModelScope.launch {
             getRepo(repo).collectLatest { result ->
-                repoUiState = when (result) {
-                    is Result.Error -> repoUiState.copy(
+                repoDetailState = when (result) {
+                    is Result.Error -> repoDetailState.copy(
                         isLoading = false,
-                        data = null,
+                        detail = null,
                         error = result.exception
                     )
-                    is Result.Loading -> repoUiState.copy(
+                    is Result.Loading -> repoDetailState.copy(
                         isLoading = true,
-                        data = null,
+                        detail = null,
                         error = null
                     )
-                    is Result.Success -> repoUiState.copy(
+                    is Result.Success -> repoDetailState.copy(
                         isLoading = false,
-                        data = result.data,
+                        detail = result.data,
                         error = null
                     )
                 }
@@ -49,8 +49,8 @@ class RepositoryDetailViewModel @Inject constructor(
     }
 }
 
-data class RepoUiState(
+data class RepoDetailState(
     val isLoading: Boolean = false,
-    val data: Item? = null,
+    val detail: Item? = null,
     val error: Throwable? = null
 )
