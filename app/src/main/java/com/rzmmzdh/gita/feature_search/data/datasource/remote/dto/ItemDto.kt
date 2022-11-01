@@ -1,5 +1,6 @@
 package com.rzmmzdh.gita.feature_search.data.datasource.remote.dto
 
+import com.google.gson.annotations.SerializedName
 import com.rzmmzdh.gita.feature_search.domain.model.Item
 import com.rzmmzdh.gita.feature_search.domain.model.License
 import com.rzmmzdh.gita.feature_search.domain.model.Owner
@@ -7,27 +8,32 @@ import com.rzmmzdh.gita.feature_search.domain.model.Owner
 data class ItemDto(
     val id: Int,
     val owner: Owner,
-    val full_name: String,
+    @SerializedName("full_name")
+    val fullName: String,
     val description: String?,
-    val forks_count: Int,
+    @SerializedName("forks_count")
+    val forksCount: Int,
     val url: String,
-    val git_url: String,
+    @SerializedName("clone_url")
+    val cloneUrl: String,
     val language: String?,
-    val stargazers_count: Int,
-    val updated_at: String,
+    @SerializedName("stargazers_count")
+    val stargazersCount: Int,
+    @SerializedName("updated_at")
+    val updatedAt: String,
     val license: License?
 )
 
 fun ItemDto.asItem() = Item(
     id,
     owner,
-    full_name,
+    fullName,
     description,
-    forks_count,
+    forksCount,
     url,
-    git_url,
+    cloneUrl,
     language,
-    stargazers_count,
-    updated_at,
+    stargazersCount,
+    updatedAt,
     license
 )

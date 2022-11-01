@@ -64,7 +64,7 @@ fun SearchRepositoriesScreen(
             result = state.searchResult.data?.items,
             onResultClick = {
                 navController.navigate(
-                    Destination.RepositoryDetail.route + "?repo=${it?.full_name}"
+                    Destination.RepositoryDetail.route + "?repo=${it?.fullName}"
                 )
             }, isDeviceConnected = isDeviceConnectedToInternet
         )
@@ -173,7 +173,7 @@ private fun SearchItem(
                     ) {
                         Text(
                             text =
-                            "⭐ ${result.stargazers_count}", style = TextStyle(
+                            "⭐ ${result.stargazersCount}", style = TextStyle(
                                 fontSize = 10.sp,
                                 fontFamily = jbMono,
                                 fontWeight = FontWeight.Light
@@ -181,7 +181,7 @@ private fun SearchItem(
                         )
                         Text(
                             text =
-                            "🧑‍🌾 ${result.forks_count}", style = TextStyle(
+                            "🧑‍🌾 ${result.forksCount}", style = TextStyle(
                                 fontSize = 10.sp,
                                 fontFamily = jbMono,
                                 fontWeight = FontWeight.Light
@@ -190,7 +190,7 @@ private fun SearchItem(
                     }
 
                     Text(
-                        text = result.full_name,
+                        text = result.fullName,
                         modifier = Modifier.fillMaxWidth(),
                         style = TextStyle(
                             textAlign = TextAlign.Center,
