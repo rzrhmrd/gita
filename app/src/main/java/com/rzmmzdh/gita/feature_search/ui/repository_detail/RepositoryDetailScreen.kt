@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -23,7 +24,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.rzmmzdh.gita.R
 import com.rzmmzdh.gita.common.theme.jbMono
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,17 +34,35 @@ fun RepositoryDetailScreen(
     navController: NavHostController,
     state: RepositoryDetailViewModel = hiltViewModel()
 ) {
-    Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->
+    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarScope = rememberCoroutineScope()
+    val clipboardManager: ClipboardManager = LocalClipboardManager.current
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { paddingValues ->
         RepoDetail(
             paddingValues,
             stars = state.repoDetailState.detail?.stargazersCount ?: 0,
             forks = state.repoDetailState.detail?.forksCount ?: 0,
             avatar = state.repoDetailState.detail?.owner?.avatar_url,
-            name = state.repoDetailState.detail?.fullName ?: "name",
-            description = state.repoDetailState.detail?.description ?: "description",
-            cloneUrl = state.repoDetailState.detail?.cloneUrl ?: "https://github.com",
-            language = state.repoDetailState.detail?.language ?: "language",
-            license = state.repoDetailState.detail?.license?.name ?: "license"
+            name = state.repoDetailState.detail?.fullName ?: stringResource(R.string.name),
+            description = state.repoDetailState.detail?.description
+                ?: stringResource(R.string.description),
+            cloneUrl = state.repoDetailState.detail?.cloneUrl
+                ?: stringResource(R.string.githubHomePage),
+            onCloneUrlClick = {
+                clipboardManager.setText(
+                    AnnotatedString(
+                        state.repoDetailState.detail?.cloneUrl ?: "https://github.com"
+                    )
+                )
+                snackbarScope.launch { snackbarHostState.showSnackbar(message = "Clone URL copied to clipboard.") }
+            },
+            language = state.repoDetailState.detail?.language ?: stringResource(R.string.language),
+            license = state.repoDetailState.detail?.license?.name
+                ?: stringResource(R.string.license)
         )
     }
 }
@@ -55,10 +76,10 @@ private fun RepoDetail(
     name: String = "name",
     description: String = "description",
     cloneUrl: String,
+    onCloneUrlClick: () -> Unit,
     language: String = "language",
     license: String = "license"
 ) {
-    val clipboardManager: ClipboardManager = LocalClipboardManager.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -76,116 +97,161 @@ private fun RepoDetail(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            Card(
-                modifier = Modifier
-                    .size(124.dp)
-                    .clip(CircleShape)
-                    .border(
-                        width = DividerDefaults.Thickness,
-                        color = DividerDefaults.color,
-                        shape = CircleShape
-                    )
-            ) {
-                AsyncImage(
-                    model = avatar,
-                    contentDescription = "owner_avatar",
-                    contentScale = ContentScale.Crop,
-                    alignment = Alignment.Center,
-                )
-            }
-
+            Avatar(avatar)
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            Text(
-                text = "⭐ $stars",
-                style = TextStyle(
-                    fontFamily = jbMono,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Normal
-                )
-            )
-            Text(
-                text = "🧑‍🌾 $forks",
-                style = TextStyle(
-                    fontFamily = jbMono,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Normal
-                )
-            )
+            Stars(stars)
+            Forks(forks)
         }
         Divider(modifier = Modifier.padding(vertical = 16.dp))
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = name,
-            style = TextStyle(
-                fontFamily = jbMono,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-            ),
-            maxLines = 2
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = description,
-            style = TextStyle(
-                fontFamily = jbMono,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Center
-            ),
-            maxLines = 6
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { clipboardManager.setText(AnnotatedString(cloneUrl)) },
-            text = cloneUrl,
-            style = TextStyle(
-                fontFamily = jbMono,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Center,
-                textDecoration = TextDecoration.LineThrough
-            ),
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = license,
-            style = TextStyle(
-                fontFamily = jbMono,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Light,
-                textAlign = TextAlign.Center
-            ),
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Box(
-            modifier = Modifier.border(
+        Name(name)
+        Description(description)
+        CloneUrl(cloneUrl = cloneUrl, onClick = onCloneUrlClick)
+        License(license)
+        Spacer(modifier = Modifier.height(8.dp))
+        Language(language)
+    }
+}
+
+@Composable
+private fun Language(language: String) {
+    Box(
+        modifier = Modifier
+            .border(
                 width = DividerDefaults.Thickness,
                 color = DividerDefaults.color,
                 shape = RoundedCornerShape(12.dp)
             )
-        ) {
-            Text(
-                text = language,
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    fontFamily = jbMono,
-                    fontWeight = FontWeight.Light,
-                ),
-                modifier = Modifier.padding(6.dp)
-            )
-
-        }
+    ) {
+        Text(
+            text = language,
+            style = TextStyle(
+                fontSize = 14.sp,
+                fontFamily = jbMono,
+                fontWeight = FontWeight.Light,
+            ),
+            modifier = Modifier.padding(6.dp)
+        )
 
     }
+}
+
+@Composable
+private fun License(license: String) {
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        text = license,
+        style = TextStyle(
+            fontFamily = jbMono,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Light,
+            textAlign = TextAlign.Center
+        ),
+    )
+}
+
+@Composable
+private fun Description(description: String) {
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        text = description,
+        style = TextStyle(
+            fontFamily = jbMono,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
+            textAlign = TextAlign.Center
+        ),
+        maxLines = 6
+    )
+}
+
+@Composable
+private fun Name(name: String) {
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        text = name,
+        style = TextStyle(
+            fontFamily = jbMono,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+        ),
+        maxLines = 2
+    )
+}
+
+@Composable
+private fun Forks(forks: Int) {
+    Text(
+        text = "🧑‍🌾 $forks",
+        style = TextStyle(
+            fontFamily = jbMono,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal
+        )
+    )
+}
+
+@Composable
+private fun Stars(stars: Int) {
+    Text(
+        text = "⭐ $stars",
+        style = TextStyle(
+            fontFamily = jbMono,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal
+        )
+    )
+}
+
+@Composable
+private fun Avatar(avatar: String?) {
+    Card(
+        modifier = Modifier
+            .size(124.dp)
+            .clip(CircleShape)
+            .border(
+                width = DividerDefaults.Thickness,
+                color = DividerDefaults.color,
+                shape = CircleShape
+            )
+    ) {
+        AsyncImage(
+            model = avatar,
+            contentDescription = "owner_avatar",
+            contentScale = ContentScale.Crop,
+            alignment = Alignment.Center,
+        )
+    }
+}
+
+@Composable
+private fun CloneUrl(
+    cloneUrl: String,
+    onClick: () -> Unit
+) {
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable(onClick = onClick),
+        text = cloneUrl,
+        style = TextStyle(
+            fontFamily = jbMono,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Normal,
+            textAlign = TextAlign.Center,
+            textDecoration = TextDecoration.LineThrough
+        ),
+    )
 }
