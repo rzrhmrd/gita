@@ -200,7 +200,7 @@ private fun SearchItem(
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = result.description ?: "description",
+                        text = result.description ?: "Description",
                         modifier = Modifier
                             .fillMaxWidth(),
                         style = TextStyle(
