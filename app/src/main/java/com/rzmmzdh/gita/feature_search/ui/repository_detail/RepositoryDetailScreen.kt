@@ -60,10 +60,8 @@ fun RepositoryDetailScreen(
                     )
                     snackbarScope.launch { snackbarHostState.showSnackbar(message = "Clone URL copied to clipboard.") }
                 },
-                language = it.language
-                    ?: stringResource(R.string.language),
-                license = it.license?.name
-                    ?: stringResource(R.string.license)
+                language = it.language ?: "Language-agnostic",
+                license = it.license?.name ?: "Licenseless"
             )
         }
     }
@@ -72,15 +70,15 @@ fun RepositoryDetailScreen(
 @Composable
 private fun RepoDetail(
     paddingValues: PaddingValues,
-    stars: Int = 0,
-    forks: Int = 0,
-    avatar: String?,
-    name: String = "name",
-    description: String = "description",
+    stars: Int,
+    forks: Int,
+    avatar: String,
+    name: String,
+    description: String,
     cloneUrl: String,
     onCloneUrlClick: () -> Unit,
-    language: String = "language",
-    license: String = "license"
+    language: String?,
+    license: String?
 ) {
     Column(
         modifier = Modifier
@@ -113,14 +111,14 @@ private fun RepoDetail(
         Name(name)
         Description(description)
         CloneUrl(cloneUrl = cloneUrl, onClick = onCloneUrlClick)
-        License(license)
+        license?.let { License(it) }
         Spacer(modifier = Modifier.height(8.dp))
-        Language(language)
+        language?.let { Language(it) }
     }
 }
 
 @Composable
-private fun Language(language: String) {
+private fun Language(language: String = "Language") {
     Box(
         modifier = Modifier
             .border(
@@ -143,7 +141,7 @@ private fun Language(language: String) {
 }
 
 @Composable
-private fun License(license: String) {
+private fun License(license: String = "License") {
     Text(
         modifier = Modifier
             .fillMaxWidth()
@@ -159,7 +157,7 @@ private fun License(license: String) {
 }
 
 @Composable
-private fun Description(description: String) {
+private fun Description(description: String = "Description") {
     Text(
         modifier = Modifier
             .fillMaxWidth()
@@ -176,7 +174,7 @@ private fun Description(description: String) {
 }
 
 @Composable
-private fun Name(name: String) {
+private fun Name(name: String = "Name") {
     Text(
         modifier = Modifier
             .fillMaxWidth()
@@ -193,7 +191,7 @@ private fun Name(name: String) {
 }
 
 @Composable
-private fun Forks(forks: Int) {
+private fun Forks(forks: Int = 0) {
     Text(
         text = "🧑‍🌾 $forks",
         style = TextStyle(
@@ -205,7 +203,7 @@ private fun Forks(forks: Int) {
 }
 
 @Composable
-private fun Stars(stars: Int) {
+private fun Stars(stars: Int = 0) {
     Text(
         text = "⭐ $stars",
         style = TextStyle(
@@ -217,7 +215,7 @@ private fun Stars(stars: Int) {
 }
 
 @Composable
-private fun Avatar(avatar: String?) {
+private fun Avatar(avatar: String) {
     Card(
         modifier = Modifier
             .size(124.dp)
