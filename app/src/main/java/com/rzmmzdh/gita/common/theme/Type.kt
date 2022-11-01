@@ -1,4 +1,4 @@
-package com.rzmmzdh.gita.core.theme
+package com.rzmmzdh.gita.common.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

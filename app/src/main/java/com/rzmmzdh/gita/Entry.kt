@@ -20,7 +20,7 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.rzmmzdh.gita.core.theme.GitaTheme
+import com.rzmmzdh.gita.common.theme.GitaTheme
 import com.rzmmzdh.gita.feature_search.ui.navigation.Destination
 import com.rzmmzdh.gita.feature_search.ui.repository_detail.RepositoryDetailScreen
 import com.rzmmzdh.gita.feature_search.ui.search_repositories.SearchRepositoriesScreen

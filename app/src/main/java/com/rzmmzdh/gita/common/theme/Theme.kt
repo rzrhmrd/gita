@@ -1,4 +1,4 @@
-package com.rzmmzdh.gita.core.theme
+package com.rzmmzdh.gita.common.theme
 
 import android.app.Activity
 import android.os.Build
