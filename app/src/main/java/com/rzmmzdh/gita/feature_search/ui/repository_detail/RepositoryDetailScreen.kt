@@ -118,103 +118,6 @@ private fun RepoDetail(
 }
 
 @Composable
-private fun Language(language: String = "Language") {
-    Box(
-        modifier = Modifier
-            .border(
-                width = DividerDefaults.Thickness,
-                color = DividerDefaults.color,
-                shape = RoundedCornerShape(12.dp)
-            )
-    ) {
-        Text(
-            text = language,
-            style = TextStyle(
-                fontSize = 12.sp,
-                fontFamily = jbMono,
-                fontWeight = FontWeight.Light,
-            ),
-            modifier = Modifier.padding(6.dp)
-        )
-
-    }
-}
-
-@Composable
-private fun License(license: String = "License") {
-    Text(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        text = license,
-        style = TextStyle(
-            fontFamily = jbMono,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Light,
-            textAlign = TextAlign.Center
-        ),
-    )
-}
-
-@Composable
-private fun Description(description: String = "Description") {
-    Text(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        text = description,
-        style = TextStyle(
-            fontFamily = jbMono,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Normal,
-            textAlign = TextAlign.Center
-        ),
-        maxLines = 6
-    )
-}
-
-@Composable
-private fun Name(name: String = "Name") {
-    Text(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        text = name,
-        style = TextStyle(
-            fontFamily = jbMono,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-        ),
-        maxLines = 2
-    )
-}
-
-@Composable
-private fun Forks(forks: Int = 0) {
-    Text(
-        text = "🧑‍🌾 $forks",
-        style = TextStyle(
-            fontFamily = jbMono,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Normal
-        )
-    )
-}
-
-@Composable
-private fun Stars(stars: Int = 0) {
-    Text(
-        text = "⭐ $stars",
-        style = TextStyle(
-            fontFamily = jbMono,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Normal
-        )
-    )
-}
-
-@Composable
 private fun Avatar(avatar: String) {
     Card(
         modifier = Modifier
@@ -236,6 +139,80 @@ private fun Avatar(avatar: String) {
 }
 
 @Composable
+private fun Stars(stars: Int = 0) {
+    Text(
+        text = "⭐ $stars",
+        style = TextStyle(
+            fontFamily = jbMono,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal
+        )
+    )
+}
+
+@Composable
+private fun Forks(forks: Int = 0) {
+    Text(
+        text = "🧑‍🌾 $forks",
+        style = TextStyle(
+            fontFamily = jbMono,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal
+        )
+    )
+}
+
+@Composable
+private fun Name(name: String = "Name") {
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        text = name,
+        style = TextStyle(
+            fontFamily = jbMono,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+        ),
+        maxLines = 2
+    )
+}
+
+@Composable
+private fun Description(description: String = "Description") {
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        text = description,
+        style = TextStyle(
+            fontFamily = jbMono,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
+            textAlign = TextAlign.Center
+        ),
+        maxLines = 6
+    )
+}
+
+@Composable
+private fun License(license: String = "License") {
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        text = license,
+        style = TextStyle(
+            fontFamily = jbMono,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Light,
+            textAlign = TextAlign.Center
+        ),
+    )
+}
+
+@Composable
 private fun CloneUrl(
     cloneUrl: String,
     onClick: () -> Unit
@@ -254,4 +231,27 @@ private fun CloneUrl(
             textDecoration = TextDecoration.LineThrough
         ),
     )
+}
+
+@Composable
+private fun Language(language: String = "Language") {
+    Box(
+        modifier = Modifier
+            .border(
+                width = DividerDefaults.Thickness,
+                color = DividerDefaults.color,
+                shape = RoundedCornerShape(12.dp)
+            )
+    ) {
+        Text(
+            text = language,
+            style = TextStyle(
+                fontSize = 14.sp,
+                fontFamily = jbMono,
+                fontWeight = FontWeight.Light,
+            ),
+            modifier = Modifier.padding(8.dp)
+        )
+
+    }
 }
