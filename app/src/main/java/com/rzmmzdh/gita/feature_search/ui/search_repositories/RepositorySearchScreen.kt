@@ -2,9 +2,8 @@ package com.rzmmzdh.gita.feature_search.ui.search_repositories
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -53,7 +52,7 @@ fun SearchRepositoriesScreen(
     ) { paddingValues ->
         state.searchResult.error?.let {
             snackbarScope.launch {
-                val errorMessage = state.searchResult.error!!.localizedMessage
+                val errorMessage = state.searchResult.error!!.localizedMessage ?: "Unknown error"
                 snackbarHostState.showSnackbar(errorMessage)
                 state.onErrorShown()
             }
@@ -140,102 +139,129 @@ private fun SearchItem(
     result: List<Item>?,
     onResultClick: (Item?) -> Unit
 ) {
-    LazyVerticalGrid(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(
                 top = paddingValues.calculateTopPadding(),
                 bottom = paddingValues.calculateBottomPadding()
             ),
-        columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.Center,
-        horizontalArrangement = Arrangement.Center
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(result ?: emptyList()) { result ->
-            ElevatedCard(
-                modifier = Modifier
-                    .size(198.dp)
-                    .padding(8.dp),
-                onClick = { onResultClick(result) },
-                shape = RoundedCornerShape(24.dp)
-            ) {
-                Column(
+        result?.let {
+            items(result) { item ->
+                ElevatedCard(
                     modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.SpaceBetween
+                        .fillMaxWidth()
+                        .height(184.dp)
+                        .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 4.dp),
+                    onClick = { onResultClick(item) },
+                    shape = RoundedCornerShape(24.dp)
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text =
-                            "⭐ ${result.stargazersCount}", style = TextStyle(
-                                fontSize = 10.sp,
-                                fontFamily = jbMono,
-                                fontWeight = FontWeight.Light
-                            )
-                        )
-                        Text(
-                            text =
-                            "🧑‍🌾 ${result.forksCount}", style = TextStyle(
-                                fontSize = 10.sp,
-                                fontFamily = jbMono,
-                                fontWeight = FontWeight.Light
-                            )
-                        )
-                    }
-
-                    Text(
-                        text = result.fullName,
-                        modifier = Modifier.fillMaxWidth(),
-                        style = TextStyle(
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = jbMono
-                        ), maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Text(
-                        text = result.description ?: "Description",
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth(),
-                        style = TextStyle(
-                            textAlign = TextAlign.Center,
-                            fontFamily = jbMono,
-                            fontSize = 12.sp
-                        ),
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 3
-                    )
-                    Box(
-                        modifier = Modifier.border(
-                            width = DividerDefaults.Thickness,
-                            color = DividerDefaults.color,
-                            shape = RoundedCornerShape(8.dp)
-                        )
+                            .padding(12.dp)
+                            .fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(
-                            text = result.language ?: "Language-agnostic",
-                            style = TextStyle(
-                                fontSize = 10.sp,
-                                fontFamily = jbMono,
-                                fontWeight = FontWeight.Light
-                            ),
-                            modifier = Modifier.padding(4.dp)
-                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceAround,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Stars(item.stargazersCount)
+                            Forks(item.forksCount)
+                        }
+                        Name(item)
+                        Description(item.description ?: "Description")
+                        Language(item.language ?: "Language")
 
                     }
 
                 }
 
+
             }
-
-
         }
+    }
+}
+
+@Composable
+private fun Stars(stars: Int) {
+    Text(
+        text =
+        "⭐ $stars", style = TextStyle(
+            fontSize = 12.sp,
+            fontFamily = jbMono,
+            fontWeight = FontWeight.Light
+        )
+    )
+}
+
+@Composable
+private fun Forks(forks: Int) {
+    Text(
+        text =
+        "🧑‍🌾 $forks", style = TextStyle(
+            fontSize = 12.sp,
+            fontFamily = jbMono,
+            fontWeight = FontWeight.Light
+        )
+    )
+}
+
+@Composable
+private fun Name(item: Item) {
+    Text(
+        text = item.fullName,
+        modifier = Modifier.fillMaxWidth(),
+        style = TextStyle(
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            fontFamily = jbMono,
+            fontSize = 16.sp
+        ), maxLines = 2,
+        overflow = TextOverflow.Ellipsis
+    )
+}
+
+@Composable
+private fun Description(description: String = "Description") {
+    Text(
+        text = description,
+        modifier = Modifier
+            .fillMaxWidth(),
+        style = TextStyle(
+            textAlign = TextAlign.Center,
+            fontFamily = jbMono,
+            fontSize = 12.sp
+        ),
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 3
+    )
+}
+
+@Composable
+private fun Language(language: String = "Language") {
+    Box(
+        modifier = Modifier.border(
+            width = DividerDefaults.Thickness,
+            color = DividerDefaults.color,
+            shape = RoundedCornerShape(8.dp)
+        )
+    ) {
+        Text(
+            text = language,
+            style = TextStyle(
+                fontSize = 12.sp,
+                fontFamily = jbMono,
+                fontWeight = FontWeight.Light
+            ),
+            modifier = Modifier.padding(4.dp)
+        )
+
     }
 }
 
