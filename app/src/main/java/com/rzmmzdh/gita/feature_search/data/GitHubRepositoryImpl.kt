@@ -26,24 +26,40 @@ class GitHubRepositoryImpl @Inject constructor(private val remote: RemoteDataSou
                         )
                     )
                 }
+                result.code() == 403 -> {
+                    emit(Result.Error(Throwable(message = "API rate limit exceeded. Please try again a few minutes later.")))
+                }
                 result.code() in 400..499 -> {
                     emit(
                         Result.Error(
                             Throwable(
                                 message =
-                                "Network logger: ${result.code()}"
+                                "Network logger: Code(${result.code()}) | API rate limit remaining(${
+                                    result.headers()["x-ratelimit-remaining"]
+                                })"
                             )
                         )
                     )
                 }
                 result.code() in 500..599 -> {
-                    emit(Result.Error(Throwable(message = "Network logger: ${result.code()}")))
+                    emit(
+                        Result.Error(
+                            Throwable(
+                                message = "Network logger: Code(${result.code()}) | API rate limit remaining(${
+                                    result.headers()["x-ratelimit-remaining"]
+                                })"
+                            )
+                        )
+                    )
                 }
                 else -> {
                     emit(
                         Result.Error(
                             Throwable(
-                                message = "Network logger: ${result.code()}"
+                                message = "Network logger: Code(${result.code()}) | API rate limit remaining(${
+                                    result.headers()["x-ratelimit-remaining"]
+                                })"
+
                             )
                         )
                     )
