@@ -28,20 +28,28 @@ class RepositorySearchViewModel @Inject constructor(private val searchRepo: Sear
     private fun search(query: String) {
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
-            delay(200L)
-            searchRepo(query).collectLatest { result ->
-                searchResult = when (result) {
-                    is Result.Error -> {
-                        searchResult.copy(error = result.exception, isLoading = false, data = null)
-                    }
+            delay(1000)
+            if (searchQuery.isNotBlank()) {
+                searchRepo(query).collectLatest { result ->
+                    searchResult = when (result) {
+                        is Result.Error -> {
+                            searchResult.copy(
+                                error = result.exception,
+                                isLoading = false,
+                                data = null
+                            )
+                        }
 
-                    is Result.Loading -> searchResult.copy(isLoading = true)
-                    is Result.Success -> searchResult.copy(
-                        data = result.data,
-                        isLoading = false,
-                        error = null
-                    )
+                        is Result.Loading -> searchResult.copy(isLoading = true)
+                        is Result.Success -> searchResult.copy(
+                            data = result.data,
+                            isLoading = false,
+                            error = null
+                        )
+                    }
                 }
+            } else {
+                searchResult = searchResult.copy(data = null)
             }
         }
     }
