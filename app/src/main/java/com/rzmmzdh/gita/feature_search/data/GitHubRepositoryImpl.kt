@@ -26,9 +26,6 @@ class GitHubRepositoryImpl @Inject constructor(private val remote: RemoteDataSou
                         )
                     )
                 }
-                result.code() == 403 -> {
-                    emit(Result.Error(Throwable(message = "API rate limit exceeded. Please try again a few minutes later.")))
-                }
                 result.code() in 400..499 -> {
                     emit(
                         Result.Error(
