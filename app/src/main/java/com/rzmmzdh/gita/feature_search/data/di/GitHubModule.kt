@@ -32,6 +32,7 @@ class GitHubModule {
             .addInterceptor(Interceptor { chain ->
                 val request = chain.request()
                 request.newBuilder()
+                    .addHeader("Accept", "application/vnd.github+json")
                     .addHeader("Authorization", BuildConfig.GITHUB_API_KEY)
                     .addHeader("User-Agent", BuildConfig.APPLICATION_ID).build()
                 return@Interceptor chain.proceed(request)
