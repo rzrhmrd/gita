@@ -174,7 +174,7 @@ private fun SearchItem(
                             Stars(item.stargazersCount)
                             Forks(item.forksCount)
                         }
-                        Name(item)
+                        Name(item.fullName)
                         Description(item.description ?: "Description")
                         Language(item.language ?: "Language")
 
@@ -213,9 +213,9 @@ private fun Forks(forks: Int) {
 }
 
 @Composable
-private fun Name(item: Item) {
+private fun Name(item: String) {
     Text(
-        text = item.fullName,
+        text = item,
         modifier = Modifier.fillMaxWidth(),
         style = TextStyle(
             textAlign = TextAlign.Center,
