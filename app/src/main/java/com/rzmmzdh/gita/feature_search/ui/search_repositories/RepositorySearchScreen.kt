@@ -14,8 +14,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.rzmmzdh.gita.R
 import com.rzmmzdh.gita.common.theme.jbMono
 import com.rzmmzdh.gita.common.util.ConnectionState
 import com.rzmmzdh.gita.common.util.connectivityState
@@ -32,10 +33,7 @@ import com.rzmmzdh.gita.feature_search.ui.navigation.Destination
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
-@OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalCoroutinesApi::class,
-    ExperimentalComposeUiApi::class
-)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoroutinesApi::class)
 @Composable
 fun SearchRepositoriesScreen(
     navController: NavHostController,
@@ -318,7 +316,7 @@ private fun OfflinePlaceholder(paddingValues: PaddingValues) {
             )
         )
         Text(
-            text = "Device is offline. Please check your internet connection.",
+            text = stringResource(R.string.device_is_offline),
             modifier = Modifier.fillMaxWidth(),
             style = MaterialTheme.typography.titleMedium.copy(color = colorTransition)
         )

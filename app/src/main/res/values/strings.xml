@@ -5,4 +5,5 @@
     <string name="name">name</string>
     <string name="language">language</string>
     <string name="license">license</string>
+    <string name="device_is_offline">Device is offline. Please check your internet connection.</string>
 </resources>
