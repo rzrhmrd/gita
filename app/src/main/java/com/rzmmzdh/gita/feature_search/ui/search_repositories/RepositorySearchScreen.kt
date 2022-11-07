@@ -106,20 +106,12 @@ private fun GitaSearchBar(
                     shape = RoundedCornerShape(32.dp),
                     colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
                     singleLine = true,
-                    textStyle = TextStyle(
-                        textAlign = TextAlign.Center,
-                        fontSize = 20.sp,
-                        fontFamily = jbMono
-                    ),
+                    textStyle = MaterialTheme.typography.titleLarge,
                     placeholder = {
                         Text(
                             text = "Gita",
                             modifier = Modifier.fillMaxWidth(),
-                            style = TextStyle(
-                                textAlign = TextAlign.Center,
-                                fontFamily = jbMono,
-                                fontSize = 20.sp,
-                            )
+                            style = MaterialTheme.typography.titleLarge
                         )
                     },
                     enabled = enabled,
@@ -212,11 +204,7 @@ private fun SearchItem(
 private fun Stars(stars: Int) {
     Text(
         text =
-        "⭐ $stars", style = TextStyle(
-            fontSize = 12.sp,
-            fontFamily = jbMono,
-            fontWeight = FontWeight.Light
-        )
+        "⭐ $stars", style = MaterialTheme.typography.labelSmall
     )
 }
 
@@ -224,11 +212,7 @@ private fun Stars(stars: Int) {
 private fun Forks(forks: Int) {
     Text(
         text =
-        "🧑‍🌾 $forks", style = TextStyle(
-            fontSize = 12.sp,
-            fontFamily = jbMono,
-            fontWeight = FontWeight.Light
-        )
+        "🧑‍🌾 $forks", style = MaterialTheme.typography.labelSmall
     )
 }
 
@@ -237,12 +221,8 @@ private fun Name(item: String) {
     Text(
         text = item,
         modifier = Modifier.fillMaxWidth(),
-        style = TextStyle(
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold,
-            fontFamily = jbMono,
-            fontSize = 16.sp
-        ), maxLines = 2,
+        style = MaterialTheme.typography.titleMedium,
+        maxLines = 2,
         overflow = TextOverflow.Ellipsis
     )
 }
@@ -253,11 +233,7 @@ private fun Description(description: String = "Description") {
         text = description,
         modifier = Modifier
             .fillMaxWidth(),
-        style = TextStyle(
-            textAlign = TextAlign.Center,
-            fontFamily = jbMono,
-            fontSize = 12.sp
-        ),
+        style = MaterialTheme.typography.titleSmall,
         overflow = TextOverflow.Ellipsis,
         maxLines = 3
     )
@@ -274,11 +250,7 @@ private fun Language(language: String = "Language") {
     ) {
         Text(
             text = language,
-            style = TextStyle(
-                fontSize = 12.sp,
-                fontFamily = jbMono,
-                fontWeight = FontWeight.Light
-            ),
+            style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.padding(4.dp)
         )
 
@@ -294,24 +266,29 @@ private fun EmptyResultPlaceholder(paddingValues: PaddingValues) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = "~",
-            modifier = Modifier.fillMaxWidth(),
-            style = TextStyle(
-                fontSize = 248.sp,
-                fontFamily = jbMono,
-                textAlign = TextAlign.Center,
-                lineHeight = 40.sp,
-                letterSpacing = 20.sp,
-                color = colorTransition(
-                    initialColor = MaterialTheme.colorScheme.primary,
-                    targetColor = MaterialTheme.colorScheme.tertiary,
-                    tweenAnimationDuration = 4000
-                )
-
-            )
-        )
+        EmptyResultPlaceholder()
     }
+}
+
+@Composable
+private fun EmptyResultPlaceholder() {
+    Text(
+        text = "~",
+        modifier = Modifier.fillMaxWidth(),
+        style = TextStyle(
+            fontSize = 248.sp,
+            fontFamily = jbMono,
+            textAlign = TextAlign.Center,
+            lineHeight = 40.sp,
+            letterSpacing = 20.sp,
+            color = colorTransition(
+                initialColor = MaterialTheme.colorScheme.primary,
+                targetColor = MaterialTheme.colorScheme.tertiary,
+                tweenAnimationDuration = 5000
+            )
+
+        )
+    )
 }
 
 @Composable
@@ -326,7 +303,7 @@ private fun OfflinePlaceholder(paddingValues: PaddingValues) {
         val colorTransition = colorTransition(
             initialColor = MaterialTheme.colorScheme.primary,
             targetColor = MaterialTheme.colorScheme.error,
-            tweenAnimationDuration = 4000
+            tweenAnimationDuration = 5000
         )
         Text(
             text = "~",
@@ -343,12 +320,7 @@ private fun OfflinePlaceholder(paddingValues: PaddingValues) {
         Text(
             text = "Device is offline. Please check your internet connection.",
             modifier = Modifier.fillMaxWidth(),
-            style = TextStyle(
-                fontSize = 16.sp,
-                fontFamily = jbMono,
-                textAlign = TextAlign.Center,
-                color = colorTransition
-            )
+            style = MaterialTheme.typography.titleMedium.copy(color = colorTransition)
         )
     }
 }

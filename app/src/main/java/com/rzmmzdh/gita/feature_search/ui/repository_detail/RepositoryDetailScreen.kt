@@ -15,17 +15,13 @@ import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.rzmmzdh.gita.R
-import com.rzmmzdh.gita.common.theme.jbMono
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -142,11 +138,7 @@ private fun Avatar(avatar: String) {
 private fun Stars(stars: Int = 0) {
     Text(
         text = "⭐ $stars",
-        style = TextStyle(
-            fontFamily = jbMono,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Normal
-        )
+        style = MaterialTheme.typography.labelLarge
     )
 }
 
@@ -154,11 +146,7 @@ private fun Stars(stars: Int = 0) {
 private fun Forks(forks: Int = 0) {
     Text(
         text = "🧑‍🌾 $forks",
-        style = TextStyle(
-            fontFamily = jbMono,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Normal
-        )
+        style = MaterialTheme.typography.labelLarge
     )
 }
 
@@ -169,12 +157,7 @@ private fun Name(name: String = "Name") {
             .fillMaxWidth()
             .padding(8.dp),
         text = name,
-        style = TextStyle(
-            fontFamily = jbMono,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-        ),
+        style = MaterialTheme.typography.titleLarge,
         maxLines = 2
     )
 }
@@ -186,12 +169,7 @@ private fun Description(description: String = "Description") {
             .fillMaxWidth()
             .padding(8.dp),
         text = description,
-        style = TextStyle(
-            fontFamily = jbMono,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Normal,
-            textAlign = TextAlign.Center
-        ),
+        style = MaterialTheme.typography.bodyLarge,
         maxLines = 6
     )
 }
@@ -203,12 +181,7 @@ private fun License(license: String = "License") {
             .fillMaxWidth()
             .padding(8.dp),
         text = license,
-        style = TextStyle(
-            fontFamily = jbMono,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Light,
-            textAlign = TextAlign.Center
-        ),
+        style = MaterialTheme.typography.labelSmall,
     )
 }
 
@@ -223,13 +196,7 @@ private fun CloneUrl(
             .padding(8.dp)
             .clickable(onClick = onClick),
         text = cloneUrl,
-        style = TextStyle(
-            fontFamily = jbMono,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Normal,
-            textAlign = TextAlign.Center,
-            textDecoration = TextDecoration.LineThrough
-        ),
+        style = MaterialTheme.typography.bodyMedium.copy(textDecoration = TextDecoration.LineThrough),
     )
 }
 
@@ -245,11 +212,7 @@ private fun Language(language: String = "Language") {
     ) {
         Text(
             text = language,
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontFamily = jbMono,
-                fontWeight = FontWeight.Light,
-            ),
+            style = MaterialTheme.typography.labelMedium,
             modifier = Modifier.padding(8.dp)
         )
 

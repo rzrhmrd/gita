@@ -5,6 +5,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.rzmmzdh.gita.R
 
@@ -14,28 +15,15 @@ val jbMono = FontFamily(
     Font(R.font.jb_mono_bold, FontWeight.Bold),
     Font(R.font.jb_mono_black, FontWeight.Black)
 )
+val defaultTextStyle = TextStyle(fontFamily = jbMono, textAlign = TextAlign.Center)
 val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-    */
+    titleLarge = defaultTextStyle.copy(fontSize = 20.sp, fontWeight = FontWeight.Bold),
+    titleMedium = defaultTextStyle.copy(fontSize = 16.sp, fontWeight = FontWeight.Bold),
+    titleSmall = defaultTextStyle.copy(fontSize = 12.sp, fontWeight = FontWeight.Normal),
+    bodyLarge = defaultTextStyle.copy(fontSize = 16.sp, fontWeight = FontWeight.Normal),
+    bodyMedium = defaultTextStyle.copy(fontSize = 14.sp, fontWeight = FontWeight.Normal),
+    bodySmall = defaultTextStyle.copy(fontSize = 12.sp, fontWeight = FontWeight.Normal),
+    labelLarge = defaultTextStyle.copy(fontSize = 16.sp, fontWeight = FontWeight.Light),
+    labelMedium = defaultTextStyle.copy(fontSize = 14.sp, fontWeight = FontWeight.Light),
+    labelSmall = defaultTextStyle.copy(fontSize = 12.sp, fontWeight = FontWeight.Light)
 )
