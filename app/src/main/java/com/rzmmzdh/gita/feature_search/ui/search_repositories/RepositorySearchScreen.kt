@@ -5,13 +5,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -27,7 +32,10 @@ import com.rzmmzdh.gita.feature_search.ui.navigation.Destination
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoroutinesApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalCoroutinesApi::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun SearchRepositoriesScreen(
     navController: NavHostController,
@@ -37,26 +45,23 @@ fun SearchRepositoriesScreen(
     val snackbarScope = rememberCoroutineScope()
     val activeConnection by connectivityState()
     val isDeviceConnectedToInternet = activeConnection === ConnectionState.Available
+    val focusManager = LocalFocusManager.current
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             GitaSearchBar(
+                modifier = Modifier,
                 query = state.searchQuery,
                 isLoading = state.searchResult.isLoading,
                 onQueryChange = { state.onQueryChange(it) },
-                enabled = isDeviceConnectedToInternet
+                enabled = isDeviceConnectedToInternet,
+                onSearch = { focusManager.clearFocus() }
             )
         }
     ) { paddingValues ->
-        state.searchResult.error?.let {
-            snackbarScope.launch {
-                val errorMessage = state.searchResult.error!!.localizedMessage ?: "Unknown error"
-                snackbarHostState.showSnackbar(errorMessage)
-                state.onErrorShown()
-            }
-        }
         SearchResult(
             paddingValues = paddingValues,
             result = state.searchResult.data?.items,
@@ -66,6 +71,13 @@ fun SearchRepositoriesScreen(
                 )
             }, isDeviceConnected = isDeviceConnectedToInternet
         )
+        state.searchResult.error?.let {
+            snackbarScope.launch {
+                val errorMessage = state.searchResult.error!!.localizedMessage ?: "Unknown error"
+                snackbarHostState.showSnackbar(errorMessage)
+                state.onErrorShown()
+            }
+        }
 
     }
 }
@@ -73,10 +85,15 @@ fun SearchRepositoriesScreen(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun GitaSearchBar(
-    query: String, onQueryChange: (String) -> Unit, isLoading: Boolean, enabled: Boolean
+    modifier: Modifier,
+    query: String,
+    onQueryChange: (String) -> Unit,
+    isLoading: Boolean,
+    enabled: Boolean,
+    onSearch: () -> Unit
 ) =
     CenterAlignedTopAppBar(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
         title = {
             Column {
@@ -85,7 +102,7 @@ private fun GitaSearchBar(
                     onValueChange = onQueryChange,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(64.dp),
+                        .height(60.dp),
                     shape = RoundedCornerShape(32.dp),
                     colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
                     singleLine = true,
@@ -105,7 +122,9 @@ private fun GitaSearchBar(
                             )
                         )
                     },
-                    enabled = enabled
+                    enabled = enabled,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(onSearch = { onSearch() }),
                 )
                 if (isLoading) {
                     LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
@@ -143,7 +162,8 @@ private fun SearchItem(
         modifier = Modifier
             .fillMaxSize()
             .padding(
-                top = paddingValues.calculateTopPadding(),
+                top = paddingValues
+                    .calculateTopPadding(),
                 bottom = paddingValues.calculateBottomPadding()
             ),
         verticalArrangement = Arrangement.Center,
