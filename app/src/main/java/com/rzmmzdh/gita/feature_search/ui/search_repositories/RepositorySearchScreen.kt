@@ -10,7 +10,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
@@ -36,6 +35,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalCoroutinesApi::class)
 @Composable
 fun SearchRepositoriesScreen(
+    modifier: Modifier = Modifier,
     navController: NavHostController,
     state: RepositorySearchViewModel = hiltViewModel()
 ) {
@@ -46,7 +46,7 @@ fun SearchRepositoriesScreen(
     val focusManager = LocalFocusManager.current
 
     Scaffold(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
@@ -83,7 +83,7 @@ fun SearchRepositoriesScreen(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun GitaSearchBar(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     query: String,
     onQueryChange: (String) -> Unit,
     isLoading: Boolean,
@@ -126,30 +126,32 @@ private fun GitaSearchBar(
 
 @Composable
 private fun SearchResult(
+    modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
     result: List<Item>?,
     onResultClick: (Item?) -> Unit,
     isDeviceConnected: Boolean
 ) {
     if (!isDeviceConnected) {
-        OfflinePlaceholder(paddingValues)
+        OfflinePlaceholder(paddingValues = paddingValues)
 
     } else if (result.isNullOrEmpty()) {
-        EmptyResultPlaceholder(paddingValues)
+        EmptyResultPlaceholder(paddingValues = paddingValues)
     } else {
-        SearchItem(paddingValues, result, onResultClick)
+        SearchItem(paddingValues = paddingValues, result = result, onResultClick = onResultClick)
     }
 }
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun SearchItem(
+    modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
     result: List<Item>?,
     onResultClick: (Item?) -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(
                 top = paddingValues
@@ -181,12 +183,12 @@ private fun SearchItem(
                             horizontalArrangement = Arrangement.SpaceAround,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Stars(item.stargazersCount)
-                            Forks(item.forksCount)
+                            Stars(stars = item.stargazersCount)
+                            Forks(forks = item.forksCount)
                         }
-                        Name(item.fullName)
-                        Description(item.description ?: "Description")
-                        Language(item.language ?: "Language")
+                        Name(name = item.fullName)
+                        Description(description = item.description ?: "Description")
+                        Language(language = item.language ?: "Language")
 
                     }
 
@@ -199,7 +201,7 @@ private fun SearchItem(
 }
 
 @Composable
-private fun Stars(stars: Int) {
+private fun Stars(modifier: Modifier = Modifier, stars: Int) {
     Text(
         text =
         "⭐ $stars", style = MaterialTheme.typography.labelSmall
@@ -207,7 +209,7 @@ private fun Stars(stars: Int) {
 }
 
 @Composable
-private fun Forks(forks: Int) {
+private fun Forks(modifier: Modifier = Modifier, forks: Int) {
     Text(
         text =
         "🧑‍🌾 $forks", style = MaterialTheme.typography.labelSmall
@@ -215,10 +217,10 @@ private fun Forks(forks: Int) {
 }
 
 @Composable
-private fun Name(item: String) {
+private fun Name(modifier: Modifier = Modifier, name: String) {
     Text(
-        text = item,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
+        text = name,
         style = MaterialTheme.typography.titleMedium,
         maxLines = 2,
         overflow = TextOverflow.Ellipsis
@@ -226,11 +228,11 @@ private fun Name(item: String) {
 }
 
 @Composable
-private fun Description(description: String = "Description") {
+private fun Description(modifier: Modifier = Modifier, description: String = "Description") {
     Text(
-        text = description,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
+        text = description,
         style = MaterialTheme.typography.titleSmall,
         overflow = TextOverflow.Ellipsis,
         maxLines = 3
@@ -238,9 +240,9 @@ private fun Description(description: String = "Description") {
 }
 
 @Composable
-private fun Language(language: String = "Language") {
+private fun Language(modifier: Modifier = Modifier, language: String = "Language") {
     Box(
-        modifier = Modifier.border(
+        modifier = modifier.border(
             width = DividerDefaults.Thickness,
             color = DividerDefaults.color,
             shape = RoundedCornerShape(8.dp)
@@ -256,9 +258,9 @@ private fun Language(language: String = "Language") {
 }
 
 @Composable
-private fun EmptyResultPlaceholder(paddingValues: PaddingValues) {
+private fun EmptyResultPlaceholder(modifier: Modifier = Modifier, paddingValues: PaddingValues) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(top = paddingValues.calculateTopPadding()),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -269,10 +271,10 @@ private fun EmptyResultPlaceholder(paddingValues: PaddingValues) {
 }
 
 @Composable
-private fun EmptyResultPlaceholder() {
+private fun EmptyResultPlaceholder(modifier: Modifier = Modifier) {
     Text(
+        modifier = modifier.fillMaxWidth(),
         text = "~",
-        modifier = Modifier.fillMaxWidth(),
         style = TextStyle(
             fontSize = 248.sp,
             fontFamily = jbMono,
@@ -290,9 +292,9 @@ private fun EmptyResultPlaceholder() {
 }
 
 @Composable
-private fun OfflinePlaceholder(paddingValues: PaddingValues) {
+private fun OfflinePlaceholder(modifier: Modifier = Modifier, paddingValues: PaddingValues) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(top = paddingValues.calculateTopPadding()),
         horizontalAlignment = Alignment.CenterHorizontally,

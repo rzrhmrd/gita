@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.stringResource
@@ -27,6 +28,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RepositoryDetailScreen(
+    modifier: Modifier = Modifier,
     navController: NavHostController,
     state: RepositoryDetailViewModel = hiltViewModel()
 ) {
@@ -35,12 +37,13 @@ fun RepositoryDetailScreen(
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
         state.repoDetailState.detail?.let {
             RepoDetail(
-                paddingValues,
+                modifier = Modifier,
+                paddingValues = paddingValues,
                 stars = it.stargazersCount,
                 forks = it.forksCount,
                 avatar = it.owner.avatar_url,
@@ -65,6 +68,7 @@ fun RepositoryDetailScreen(
 
 @Composable
 private fun RepoDetail(
+    modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
     stars: Int,
     forks: Int,
@@ -77,7 +81,7 @@ private fun RepoDetail(
     license: String?
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(
                 top = paddingValues.calculateTopPadding(),
@@ -93,30 +97,30 @@ private fun RepoDetail(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Avatar(avatar)
+            Avatar(avatar = avatar)
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            Stars(stars)
-            Forks(forks)
+            Stars(stars = stars)
+            Forks(forks = forks)
         }
         Divider(modifier = Modifier.padding(vertical = 16.dp))
-        Name(name)
-        Description(description)
+        Name(name = name)
+        Description(description = description)
         CloneUrl(cloneUrl = cloneUrl, onClick = onCloneUrlClick)
-        license?.let { License(it) }
+        license?.let { License(license = it) }
         Spacer(modifier = Modifier.height(8.dp))
-        language?.let { Language(it) }
+        language?.let { Language(language = it) }
     }
 }
 
 @Composable
-private fun Avatar(avatar: String) {
+private fun Avatar(modifier: Modifier = Modifier, avatar: String) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .size(124.dp)
             .clip(CircleShape)
             .border(
@@ -135,7 +139,7 @@ private fun Avatar(avatar: String) {
 }
 
 @Composable
-private fun Stars(stars: Int = 0) {
+private fun Stars(modifier: Modifier = Modifier, stars: Int = 0) {
     Text(
         text = "⭐ $stars",
         style = MaterialTheme.typography.labelLarge
@@ -143,7 +147,7 @@ private fun Stars(stars: Int = 0) {
 }
 
 @Composable
-private fun Forks(forks: Int = 0) {
+private fun Forks(modifier: Modifier = Modifier, forks: Int = 0) {
     Text(
         text = "🧑‍🌾 $forks",
         style = MaterialTheme.typography.labelLarge
@@ -151,9 +155,9 @@ private fun Forks(forks: Int = 0) {
 }
 
 @Composable
-private fun Name(name: String = "Name") {
+private fun Name(modifier: Modifier = Modifier, name: String = "Name") {
     Text(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(8.dp),
         text = name,
@@ -163,9 +167,9 @@ private fun Name(name: String = "Name") {
 }
 
 @Composable
-private fun Description(description: String = "Description") {
+private fun Description(modifier: Modifier = Modifier, description: String = "Description") {
     Text(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(8.dp),
         text = description,
@@ -175,9 +179,9 @@ private fun Description(description: String = "Description") {
 }
 
 @Composable
-private fun License(license: String = "License") {
+private fun License(modifier: Modifier = Modifier, license: String = "License") {
     Text(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(8.dp),
         text = license,
@@ -187,11 +191,12 @@ private fun License(license: String = "License") {
 
 @Composable
 private fun CloneUrl(
+    modifier: Modifier = Modifier,
     cloneUrl: String,
     onClick: () -> Unit
 ) {
     Text(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
             .clickable(onClick = onClick),
@@ -201,9 +206,9 @@ private fun CloneUrl(
 }
 
 @Composable
-private fun Language(language: String = "Language") {
+private fun Language(modifier: Modifier = Modifier, language: String = "Language") {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .border(
                 width = DividerDefaults.Thickness,
                 color = DividerDefaults.color,
