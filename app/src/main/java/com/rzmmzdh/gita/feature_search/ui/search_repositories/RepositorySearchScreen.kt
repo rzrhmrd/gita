@@ -65,7 +65,7 @@ fun SearchRepositoriesScreen(
             result = state.searchResult.data?.items,
             onResultClick = {
                 navController.navigate(
-                    Destination.RepositoryDetail.route + "?repo=${it?.fullName}"
+                    Destination.RepositoryDetail.withName(it!!.fullName)
                 )
             }, isDeviceConnected = isDeviceConnectedToInternet
         )
