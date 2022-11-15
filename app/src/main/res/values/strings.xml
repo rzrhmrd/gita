@@ -6,4 +6,7 @@
     <string name="language">language</string>
     <string name="license">license</string>
     <string name="device_is_offline">Device is offline. Please check your internet connection.</string>
+    <string name="no_description">No description</string>
+    <string name="language_agnostic">Language-agnostic</string>
+    <string name="licenseless">Licenseless</string>
 </resources>

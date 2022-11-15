@@ -7,8 +7,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.sharp.DateRange
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -189,8 +187,13 @@ private fun SearchItem(
                             Forks(forks = item.forksCount)
                         }
                         Name(name = item.fullName)
-                        Description(description = item.description ?: "Description")
-                        Language(language = item.language ?: "Language")
+                        Description(
+                            description = item.description
+                                ?: stringResource(R.string.no_description)
+                        )
+                        Language(
+                            language = item.language ?: stringResource(R.string.language_agnostic)
+                        )
 
                     }
 

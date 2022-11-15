@@ -59,8 +59,8 @@ fun RepositoryDetailScreen(
                     )
                     snackbarScope.launch { snackbarHostState.showSnackbar(message = "Clone URL copied to clipboard.") }
                 },
-                language = it.language ?: "Language-agnostic",
-                license = it.license?.name ?: "Licenseless"
+                language = it.language ?: stringResource(R.string.language_agnostic),
+                license = it.license?.name ?: stringResource(R.string.licenseless)
             )
         }
     }
