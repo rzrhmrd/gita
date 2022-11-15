@@ -56,7 +56,7 @@ class Entry : ComponentActivity() {
                                     animationSpec = tween(500)
                                 )
                             }) {
-                            SearchRepositoriesScreen(navController)
+                            SearchRepositoriesScreen(navController = navController)
                         }
                         composable(
                             route = Destination.RepositoryDetail.route + "?repo={repo}",
@@ -77,7 +77,7 @@ class Entry : ComponentActivity() {
                                     animationSpec = tween(500)
                                 )
                             }) {
-                            RepositoryDetailScreen(navController)
+                            RepositoryDetailScreen(navController = navController)
                         }
                     }
                     HideSystemUi()
