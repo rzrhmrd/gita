@@ -28,6 +28,7 @@ class RepositorySearchViewModel @Inject constructor(private val searchRepo: Sear
     private fun search(query: String) {
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
+            searchResult = searchResult.copy(isLoading = true)
             delay(1000)
             if (searchQuery.isNotBlank()) {
                 searchRepo(query).collectLatest { result ->
@@ -49,7 +50,7 @@ class RepositorySearchViewModel @Inject constructor(private val searchRepo: Sear
                     }
                 }
             } else {
-                searchResult = searchResult.copy(data = null)
+                searchResult = searchResult.copy(data = null, isLoading = false)
             }
         }
     }
