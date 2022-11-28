@@ -14,6 +14,7 @@ navigationCompose = "2.5.3"
 hiltNavigationCompose = "1.0.0"
 accompanist = "0.27.0"
 coilCompose = "2.2.2"
+firebase-bom = "31.1.0"
 
 [libraries]
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
@@ -39,7 +40,9 @@ hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", ve
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
 accompanist-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanist" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
-
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
+firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx" }
+firebase-crashlytics-ktx = { module = "com.google.firebase:firebase-crashlytics-ktx" }
 
 
 

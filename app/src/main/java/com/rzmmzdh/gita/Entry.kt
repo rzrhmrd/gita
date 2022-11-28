@@ -20,6 +20,9 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.rzmmzdh.gita.common.theme.GitaTheme
 import com.rzmmzdh.gita.feature_search.ui.navigation.Destination
 import com.rzmmzdh.gita.feature_search.ui.repository_detail.RepositoryDetailScreen
@@ -28,9 +31,12 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class Entry : ComponentActivity() {
+    private lateinit var analytics: FirebaseAnalytics
+
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initFirebase()
         setContent {
             val navController = rememberAnimatedNavController()
             GitaTheme {
@@ -84,6 +90,10 @@ class Entry : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun initFirebase() {
+        analytics = Firebase.analytics
     }
 
     @Composable
